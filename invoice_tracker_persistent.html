@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Invoice Tracker</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff; --bg2: #f5f5f3;
+    --tx: #1a1a1a; --tx2: #6b6b6b; --tx3: #aaaaaa;
+    --bd: rgba(0,0,0,0.1); --bd2: rgba(0,0,0,0.18);
+    --ok-bg: #EAF3DE; --ok-tx: #27500A;
+    --er-bg: #FCEBEB; --er-tx: #791F1F;
+    --info-bg: #E6F1FB; --info-tx: #0C447C;
+    --neu-bg: #F1EFE8; --neu-tx: #444441;
+    --teal-bg: #E1F5EE; --teal-tx: #085041; --teal: #1D9E75; --teal-dk: #0F6E56;
+    --warn-tx: #633806;
+    --r: 8px; --rl: 12px; --font: system-ui,-apple-system,sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1e; --bg2: #2a2a2a;
+      --tx: #f0f0f0; --tx2: #aaaaaa; --tx3: #666666;
+      --bd: rgba(255,255,255,0.1); --bd2: rgba(255,255,255,0.2);
+      --ok-bg: #1a2e0a; --ok-tx: #a3d96e;
+      --er-bg: #2e0a0a; --er-tx: #f09595;
+      --info-bg: #061b2e; --info-tx: #85b7eb;
+      --neu-bg: #2a2a28; --neu-tx: #b4b2a9;
+      --teal-bg: #04342C; --teal-tx: #9FE1CB; --teal: #1D9E75; --teal-dk: #5DCAA5;
+      --warn-tx: #FAC775;
+    }
+  }
+  body { font-family: var(--font); background: var(--bg2); color: var(--tx); min-height: 100vh; padding: 2rem 1rem; }
+  .container { max-width: 1040px; margin: 0 auto; }
+  h1 { font-size: 22px; font-weight: 500; margin-bottom: 1.5rem; }
+
+  .summary { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; margin-bottom: 1.5rem; }
+  .card { background: var(--bg); border-radius: var(--r); padding: 14px 16px; border: 0.5px solid var(--bd); }
+  .card-label { font-size: 12px; color: var(--tx2); margin-bottom: 6px; }
+  .card-value { font-size: 20px; font-weight: 500; }
+  .card-value.green { color: var(--ok-tx); }
+  .card-value.teal  { color: var(--teal-dk); }
+
+  .panel { background: var(--bg); border-radius: var(--rl); border: 0.5px solid var(--bd); padding: 1.25rem; }
+  .toolbar { display: flex; gap: 10px; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
+  .toolbar input[type=text] { flex: 1; min-width: 160px; padding: 7px 12px; border: 0.5px solid var(--bd2); border-radius: var(--r); font-size: 14px; background: var(--bg2); color: var(--tx); outline: none; }
+  .toolbar input[type=text]:focus { border-color: var(--tx2); }
+  .toolbar select { padding: 7px 12px; border: 0.5px solid var(--bd2); border-radius: var(--r); font-size: 14px; background: var(--bg2); color: var(--tx); outline: none; cursor: pointer; }
+  .add-btn { border-radius: var(--r); padding: 7px 14px; font-size: 14px; cursor: pointer; font-weight: 500; white-space: nowrap; }
+  .add-btn.def { background: var(--bg); color: var(--tx); border: 0.5px solid var(--bd2); }
+  .add-btn.def:hover { background: var(--bg2); }
+  .add-btn.teal { background: var(--teal-bg); color: var(--teal-tx); border: 0.5px solid var(--teal); }
+  .add-btn.teal:hover { filter: brightness(0.95); }
+
+  .sec-title { font-size: 13px; font-weight: 500; color: var(--tx2); margin: 1.75rem 0 0.75rem; padding-bottom: 6px; border-bottom: 0.5px solid var(--bd); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; font-size: 12px; font-weight: 500; color: var(--tx2); padding: 8px 10px; border-bottom: 0.5px solid var(--bd); }
+  td { padding: 10px; border-bottom: 0.5px solid var(--bd); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--bg2); }
+  .rmk { max-width: 160px; color: var(--tx2); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 99px; }
+  .b-sent     { background: var(--info-bg); color: var(--info-tx); }
+  .b-overdue  { background: var(--er-bg);   color: var(--er-tx); }
+  .b-paid     { background: var(--ok-bg);   color: var(--ok-tx); }
+  .b-draft    { background: var(--neu-bg);  color: var(--neu-tx); }
+  .b-settled  { background: var(--teal-bg); color: var(--teal-tx); }
+  .b-unmatched{ background: var(--neu-bg);  color: var(--neu-tx); }
+
+  .act { background: none; border: none; cursor: pointer; padding: 4px 8px; border-radius: 6px; font-size: 12px; color: var(--tx2); }
+  .act:hover { background: var(--bg2); color: var(--tx); }
+  .act.danger { color: var(--er-tx); }
+
+  .empty { text-align: center; padding: 1.5rem; color: var(--tx3); font-size: 14px; }
+  .status-bar { font-size: 12px; padding: 6px 0; margin-left: auto; }
+  .status-bar.saving { color: var(--tx2); }
+  .status-bar.saved  { color: var(--ok-tx); }
+  .status-bar.error  { color: var(--er-tx); }
+
+  .error-box { background: var(--er-bg); border: 0.5px solid var(--er-tx); border-radius: var(--r); padding: 12px 16px; margin-bottom: 1rem; font-size: 13px; color: var(--er-tx); }
+  .error-box strong { font-weight: 500; display: block; margin-bottom: 4px; }
+  .error-box code { font-family: monospace; font-size: 12px; background: rgba(0,0,0,0.06); padding: 2px 5px; border-radius: 3px; }
+
+  .loading { display: flex; align-items: center; gap: 10px; padding: 2rem; color: var(--tx2); font-size: 14px; }
+  .spinner { width: 18px; height: 18px; border: 2px solid var(--bd2); border-top-color: var(--teal); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .modal-wrap { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; align-items: flex-start; justify-content: center; padding-top: 40px; overflow-y: auto; }
+  .modal-wrap.open { display: flex; }
+  .modal { background: var(--bg); border-radius: var(--rl); border: 0.5px solid var(--bd2); padding: 1.5rem; width: 100%; max-width: 460px; margin: 0 1rem 2rem; }
+  .modal h3 { font-size: 16px; font-weight: 500; margin-bottom: 1.25rem; }
+  .form-row { margin-bottom: 12px; }
+  .form-row label { display: block; font-size: 12px; color: var(--tx2); margin-bottom: 4px; }
+  .opt { font-size: 11px; color: var(--tx3); margin-left: 4px; }
+  .form-row input, .form-row select, .form-row textarea { width: 100%; padding: 7px 10px; border: 0.5px solid var(--bd2); border-radius: var(--r); font-size: 14px; background: var(--bg2); color: var(--tx); outline: none; font-family: inherit; }
+  .form-row input:focus, .form-row select:focus, .form-row textarea:focus { border-color: var(--tx2); }
+  .form-row textarea { resize: vertical; min-height: 60px; }
+  .amt-wrap { position: relative; }
+  .amt-pre { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--tx2); pointer-events: none; }
+  .amt-wrap input { padding-left: 22px !important; }
+  .form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 1rem; flex-wrap: wrap; }
+  .btn-cancel { background: none; border: 0.5px solid var(--bd2); border-radius: var(--r); padding: 7px 16px; font-size: 14px; cursor: pointer; color: var(--tx2); }
+  .btn-save { border: none; border-radius: var(--r); padding: 7px 16px; font-size: 14px; cursor: pointer; font-weight: 500; }
+  .btn-dark { background: var(--tx); color: var(--bg); }
+  .btn-teal { background: var(--teal); color: #fff; }
+  .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .match-box { border: 0.5px solid var(--bd2); border-radius: var(--r); padding: 12px 14px; margin-bottom: 12px; background: var(--bg2); }
+  .match-box-title { font-size: 12px; font-weight: 500; color: var(--tx2); margin-bottom: 8px; }
+  .match-inv-row { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; }
+  .match-sum { display: flex; justify-content: space-between; font-size: 13px; padding-top: 8px; margin-top: 6px; border-top: 0.5px solid var(--bd); }
+  .match-diff { font-size: 12px; color: var(--warn-tx); margin-top: 4px; text-align: right; }
+
+  @media (max-width: 640px) {
+    .summary { grid-template-columns: repeat(2, 1fr); }
+    th:nth-child(4), td:nth-child(4), th:nth-child(5), td:nth-child(5) { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Invoice tracker</h1>
+
+  <div id="error-area"></div>
+
+  <div class="summary">
+    <div class="card"><div class="card-label">Total invoices</div><div class="card-value" id="s-total">—</div></div>
+    <div class="card"><div class="card-label">Total invoiced</div><div class="card-value" id="s-value">—</div></div>
+    <div class="card"><div class="card-label">Paid (invoices)</div><div class="card-value green" id="s-paid">—</div></div>
+    <div class="card"><div class="card-label">Payments received</div><div class="card-value teal" id="s-received">—</div></div>
+  </div>
+
+  <div class="panel">
+    <div class="toolbar">
+      <input type="text" id="search" placeholder="Search client, invoice # or remarks..." />
+      <select id="filter">
+        <option value="">All statuses</option>
+        <option value="draft">Draft</option>
+        <option value="sent">Sent</option>
+        <option value="overdue">Overdue</option>
+        <option value="paid">Paid</option>
+      </select>
+      <button class="add-btn def" onclick="openInvModal()">+ New invoice</button>
+      <button class="add-btn teal" onclick="openPayModal()">+ Add payment received</button>
+      <span class="status-bar" id="status-bar"></span>
+    </div>
+
+    <div id="inv-loading" class="loading"><div class="spinner"></div> Connecting to database...</div>
+    <table id="inv-table" style="display:none;">
+      <thead><tr><th>Invoice #</th><th>Client</th><th>Amount</th><th>Issue date</th><th>Due date</th><th>Remarks</th><th>Status</th><th></th></tr></thead>
+      <tbody id="inv-list"></tbody>
+    </table>
+    <div class="empty" id="inv-empty" style="display:none;">No invoices found. Add one to get started.</div>
+
+    <div class="sec-title">Payments received</div>
+    <table id="pay-table" style="display:none;">
+      <thead><tr><th>Reference</th><th>Client</th><th>Amount</th><th>Date</th><th>Notes</th><th>Status</th><th></th></tr></thead>
+      <tbody id="pay-list"></tbody>
+    </table>
+    <div class="empty" id="pay-empty" style="display:none;">No payments recorded yet.</div>
+  </div>
+</div>
+
+<!-- Invoice modal -->
+<div class="modal-wrap" id="inv-modal">
+  <div class="modal">
+    <h3 id="inv-title">New invoice</h3>
+    <div class="form-row"><label>Invoice #</label><input type="text" id="f-num" placeholder="INV-001" /></div>
+    <div class="form-row"><label>Client</label>
+      <select id="f-client">
+        <option value="">Select client...</option>
+        <option value="CFI">CFI</option>
+        <option value="Jolex">Jolex</option>
+        <option value="KSV">KSV</option>
+        <option value="GOT SG">GOT SG</option>
+      </select>
+    </div>
+    <div class="form-row"><label>Amount ($)</label>
+      <div class="amt-wrap"><span class="amt-pre">$</span><input type="text" id="f-amount" placeholder="0.00" inputmode="decimal" /></div>
+    </div>
+    <div class="form-row"><label>Issue date</label><input type="date" id="f-issue" /></div>
+    <div class="form-row"><label>Due date</label><input type="date" id="f-due" /></div>
+    <div class="form-row"><label>Remarks</label><textarea id="f-remarks" placeholder="e.g. Consulting services for Q1 2026"></textarea></div>
+    <div class="form-row"><label>Status</label>
+      <select id="f-status">
+        <option value="draft">Draft</option>
+        <option value="sent" selected>Sent</option>
+        <option value="overdue">Overdue</option>
+        <option value="paid">Paid</option>
+      </select>
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeInvModal()">Cancel</button>
+      <button class="btn-save btn-dark" id="inv-save-btn" onclick="saveInvoice()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Payment modal -->
+<div class="modal-wrap" id="pay-modal">
+  <div class="modal">
+    <h3>Add payment received</h3>
+    <div class="form-row"><label>Reference <span class="opt">optional</span></label><input type="text" id="p-ref" placeholder="e.g. TT-20260327" /></div>
+    <div class="form-row"><label>Client <span class="opt">optional</span></label>
+      <select id="p-client">
+        <option value="">Select client...</option>
+        <option value="CFI">CFI</option>
+        <option value="Jolex">Jolex</option>
+        <option value="KSV">KSV</option>
+        <option value="GOT SG">GOT SG</option>
+      </select>
+    </div>
+    <div class="form-row"><label>Amount ($)</label>
+      <div class="amt-wrap"><span class="amt-pre">$</span><input type="text" id="p-amount" placeholder="0.00" inputmode="decimal" /></div>
+    </div>
+    <div class="form-row"><label>Date received</label><input type="date" id="p-date" /></div>
+    <div class="form-row"><label>Notes <span class="opt">optional</span></label><input type="text" id="p-notes" placeholder="e.g. Bank transfer for INV-003" /></div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closePayModal()">Cancel</button>
+      <button class="btn-save btn-teal" id="pay-save-btn" onclick="submitPayment()">Save payment</button>
+    </div>
+  </div>
+</div>
+
+<!-- Match confirmation modal -->
+<div class="modal-wrap" id="match-modal">
+  <div class="modal">
+    <h3>Invoice match found</h3>
+    <p style="font-size:13px;color:var(--tx2);margin-bottom:14px;">The payment amount matches the following unpaid invoice(s). Confirm to mark them as paid and settle this payment.</p>
+    <div class="match-box">
+      <div class="match-box-title">Matched invoices</div>
+      <div id="match-rows"></div>
+      <div class="match-sum">
+        <span style="color:var(--tx2);">Invoice total</span>
+        <span id="match-inv-total" style="font-weight:500;"></span>
+      </div>
+      <div class="match-sum" style="border-top:none;padding-top:2px;">
+        <span style="color:var(--tx2);">Payment received</span>
+        <span id="match-pay-amt" style="font-weight:500;color:var(--teal-dk);"></span>
+      </div>
+      <div class="match-diff" id="match-diff"></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="declineMatch()">Skip — save without settling</button>
+      <button class="btn-save btn-teal" id="match-confirm-btn" onclick="confirmMatch()">Confirm &amp; settle</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://zorhvfycftabmhlvnajf.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpvcmh2ZnljZnRhYm1obHZuYWpmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1OTE4MzYsImV4cCI6MjA5MDE2NzgzNn0.NEZSem4W_n4rVwp0lNTMj81yqGz0vkNtKvNPpwKMIO4';
+
+  let sb = null;
+  let invoices = [], payments = [];
+  let editId = null, pendingPay = null, pendingMatchIds = [];
+
+  function showError(title, detail) {
+    document.getElementById('error-area').innerHTML = `
+      <div class="error-box">
+        <strong>${title}</strong>
+        ${detail ? `<span>${detail}</span>` : ''}
+      </div>`;
+  }
+  function clearError() { document.getElementById('error-area').innerHTML = ''; }
+
+  function setStatus(msg, type) {
+    const el = document.getElementById('status-bar');
+    el.textContent = msg;
+    el.className = 'status-bar ' + (type || '');
+    if (type === 'saved') setTimeout(() => { if (el.textContent === msg) el.textContent = ''; }, 2500);
+  }
+
+  function parseAmt(s) { return parseFloat(String(s).replace(/,/g, '')) || 0; }
+  function fmt(n) { return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function fmtD(n) { return Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
+  function bindAmt(id) {
+    const el = document.getElementById(id);
+    el.addEventListener('input', () => {
+      let raw = el.value.replace(/[^0-9.]/g, '');
+      const pts = raw.split('.');
+      pts[0] = pts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      el.value = pts.length > 1 ? pts[0] + '.' + pts[1] : pts[0];
+    });
+    el.addEventListener('blur', () => { const n = parseAmt(el.value); if (n) el.value = fmtD(n); });
+  }
+
+  function sBadge(s) {
+    const m = { draft: 'b-draft', sent: 'b-sent', overdue: 'b-overdue', paid: 'b-paid' };
+    return `<span class="badge ${m[s] || 'b-draft'}">${s[0].toUpperCase() + s.slice(1)}</span>`;
+  }
+
+  function updateSummary() {
+    document.getElementById('s-total').textContent = invoices.length;
+    document.getElementById('s-value').textContent = fmt(invoices.reduce((a, i) => a + Number(i.amount), 0));
+    document.getElementById('s-paid').textContent = fmt(invoices.filter(i => i.status === 'paid').reduce((a, i) => a + Number(i.amount), 0));
+    document.getElementById('s-received').textContent = fmt(payments.reduce((a, p) => a + Number(p.amount), 0));
+  }
+
+  function render() {
+    const q = document.getElementById('search').value.toLowerCase();
+    const f = document.getElementById('filter').value;
+    const list = invoices.filter(i => {
+      const mq = !q || (i.client||'').toLowerCase().includes(q) || (i.num||'').toLowerCase().includes(q) || (i.remarks||'').toLowerCase().includes(q);
+      return mq && (!f || i.status === f);
+    });
+
+    document.getElementById('inv-loading').style.display = 'none';
+    document.getElementById('inv-table').style.display = list.length ? '' : 'none';
+    document.getElementById('inv-empty').style.display = !list.length ? 'block' : 'none';
+
+    const tb = document.getElementById('inv-list');
+    tb.innerHTML = '';
+    list.forEach(inv => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="font-weight:500;">${inv.num || ''}</td>
+        <td>${inv.client || ''}</td>
+        <td>${fmt(inv.amount)}</td>
+        <td style="color:var(--tx2);">${inv.issue || ''}</td>
+        <td style="color:var(--tx2);">${inv.due || ''}</td>
+        <td class="rmk" title="${(inv.remarks||'').replace(/"/g,'&quot;')}">${inv.remarks || '<span style="color:var(--tx3)">—</span>'}</td>
+        <td>${sBadge(inv.status || 'draft')}</td>
+        <td>
+          ${inv.status !== 'paid' ? `<button class="act" onclick="markPaid(${inv.id})">Mark paid</button>` : ''}
+          <button class="act" onclick="editInv(${inv.id})">Edit</button>
+          <button class="act danger" onclick="delInv(${inv.id})">Delete</button>
+        </td>`;
+      tb.appendChild(tr);
+    });
+
+    const pl = payments.filter(p => !q || (p.client||'').toLowerCase().includes(q) || (p.ref||'').toLowerCase().includes(q));
+    document.getElementById('pay-table').style.display = pl.length ? '' : 'none';
+    document.getElementById('pay-empty').style.display = !pl.length ? 'block' : 'none';
+
+    const pb = document.getElementById('pay-list');
+    pb.innerHTML = '';
+    pl.forEach(p => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="font-weight:500;">${p.ref || '<span style="color:var(--tx3)">—</span>'}</td>
+        <td>${p.client || '<span style="color:var(--tx3)">—</span>'}</td>
+        <td style="color:var(--teal-dk);font-weight:500;">${fmt(p.amount)}</td>
+        <td style="color:var(--tx2);">${p.date || ''}</td>
+        <td style="color:var(--tx2);">${p.notes || '—'}</td>
+        <td><span class="badge ${p.settled ? 'b-settled' : 'b-unmatched'}">${p.settled ? 'Settled' : 'Unmatched'}</span></td>
+        <td><button class="act danger" onclick="delPay(${p.id})">Delete</button></td>`;
+      pb.appendChild(tr);
+    });
+
+    updateSummary();
+  }
+
+  async function loadAll() {
+    clearError();
+    setStatus('Connecting...', 'saving');
+
+    try {
+      const [invRes, payRes] = await Promise.all([
+        sb.from('invoices').select('*').order('id', { ascending: true }),
+        sb.from('payments').select('*').order('id', { ascending: true })
+      ]);
+
+      if (invRes.error) {
+        showError('Could not load invoices', `Error: ${invRes.error.message} (code: ${invRes.error.code})`);
+        setStatus('Load failed', 'error');
+        document.getElementById('inv-loading').style.display = 'none';
+        document.getElementById('inv-empty').style.display = 'block';
+        document.getElementById('inv-empty').textContent = 'Could not load data. See error above.';
+        return;
+      }
+      if (payRes.error) {
+        showError('Could not load payments', `Error: ${payRes.error.message} (code: ${payRes.error.code})`);
+      }
+
+      invoices = invRes.data || [];
+      payments = payRes.data || [];
+      setStatus('');
+      clearError();
+      render();
+    } catch (err) {
+      showError('Connection failed', `Could not reach Supabase. Check your internet connection. (${err.message})`);
+      setStatus('Connection failed', 'error');
+      document.getElementById('inv-loading').style.display = 'none';
+    }
+  }
+
+  /* ── Invoice CRUD ── */
+  function openInvModal() {
+    editId = null;
+    document.getElementById('inv-title').textContent = 'New invoice';
+    const t = new Date().toISOString().slice(0, 10);
+    const d = new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10);
+    document.getElementById('f-num').value = '';
+    document.getElementById('f-client').value = '';
+    document.getElementById('f-amount').value = '';
+    document.getElementById('f-issue').value = t;
+    document.getElementById('f-due').value = d;
+    document.getElementById('f-remarks').value = '';
+    document.getElementById('f-status').value = 'sent';
+    document.getElementById('inv-modal').classList.add('open');
+  }
+  function editInv(id) {
+    editId = id;
+    const inv = invoices.find(i => i.id === id);
+    document.getElementById('inv-title').textContent = 'Edit invoice';
+    document.getElementById('f-num').value = inv.num || '';
+    document.getElementById('f-client').value = inv.client || '';
+    document.getElementById('f-amount').value = fmtD(inv.amount);
+    document.getElementById('f-issue').value = inv.issue || '';
+    document.getElementById('f-due').value = inv.due || '';
+    document.getElementById('f-remarks').value = inv.remarks || '';
+    document.getElementById('f-status').value = inv.status || 'sent';
+    document.getElementById('inv-modal').classList.add('open');
+  }
+  function closeInvModal() { document.getElementById('inv-modal').classList.remove('open'); }
+
+  async function saveInvoice() {
+    const num = document.getElementById('f-num').value.trim();
+    const client = document.getElementById('f-client').value;
+    const amount = parseAmt(document.getElementById('f-amount').value);
+    const issue = document.getElementById('f-issue').value;
+    const due = document.getElementById('f-due').value;
+    const remarks = document.getElementById('f-remarks').value.trim();
+    const status = document.getElementById('f-status').value;
+    if (!num || !client || !issue || !due) return;
+
+    const btn = document.getElementById('inv-save-btn');
+    btn.disabled = true;
+    closeInvModal();
+    setStatus('Saving...', 'saving');
+
+    const payload = { num, client, amount, issue, due, remarks, status };
+    try {
+      let error, data;
+      if (editId) {
+        ({ error } = await sb.from('invoices').update(payload).eq('id', editId));
+        if (!error) Object.assign(invoices.find(i => i.id === editId), payload);
+      } else {
+        ({ data, error } = await sb.from('invoices').insert(payload).select().single());
+        if (!error) invoices.push(data);
+      }
+      if (error) { showError('Save failed', error.message); setStatus('Save failed', 'error'); }
+      else { clearError(); setStatus('Saved', 'saved'); render(); }
+    } catch (e) { showError('Save failed', e.message); setStatus('Save failed', 'error'); }
+    btn.disabled = false;
+  }
+
+  async function markPaid(id) {
+    setStatus('Saving...', 'saving');
+    const { error } = await sb.from('invoices').update({ status: 'paid' }).eq('id', id);
+    if (error) { showError('Update failed', error.message); setStatus('Failed', 'error'); return; }
+    invoices.find(i => i.id === id).status = 'paid';
+    setStatus('Saved', 'saved'); render();
+  }
+
+  async function delInv(id) {
+    if (!confirm('Delete this invoice?')) return;
+    setStatus('Deleting...', 'saving');
+    const { error } = await sb.from('invoices').delete().eq('id', id);
+    if (error) { showError('Delete failed', error.message); setStatus('Failed', 'error'); return; }
+    invoices = invoices.filter(i => i.id !== id);
+    setStatus('Deleted', 'saved'); render();
+  }
+
+  /* ── Matching ── */
+  const TOLERANCE = 5;
+  function findMatch(payAmt, clientFilter) {
+    let cands = invoices.filter(i => i.status !== 'paid' && i.status !== 'draft');
+    if (clientFilter) cands = cands.filter(i => i.client === clientFilter);
+    const n = Math.min(cands.length, 20);
+    let best = null;
+    for (let mask = 1; mask < (1 << n); mask++) {
+      const combo = []; let sum = 0;
+      for (let b = 0; b < n; b++) { if (mask & (1 << b)) { combo.push(cands[b]); sum += Number(cands[b].amount); } }
+      const diff = Math.abs(sum - payAmt);
+      if (diff <= TOLERANCE) {
+        if (!best || combo.length < best.combo.length || (combo.length === best.combo.length && diff < best.diff))
+          best = { combo, sum, diff };
+      }
+    }
+    return best;
+  }
+
+  /* ── Payment CRUD ── */
+  function openPayModal() {
+    document.getElementById('p-ref').value = '';
+    document.getElementById('p-client').value = '';
+    document.getElementById('p-amount').value = '';
+    document.getElementById('p-date').value = new Date().toISOString().slice(0, 10);
+    document.getElementById('p-notes').value = '';
+    document.getElementById('pay-modal').classList.add('open');
+  }
+  function closePayModal() { document.getElementById('pay-modal').classList.remove('open'); }
+
+  function submitPayment() {
+    const ref = document.getElementById('p-ref').value.trim();
+    const client = document.getElementById('p-client').value;
+    const amount = parseAmt(document.getElementById('p-amount').value);
+    const date = document.getElementById('p-date').value;
+    const notes = document.getElementById('p-notes').value.trim();
+    if (!amount || !date) return;
+    pendingPay = { ref: ref || null, client: client || null, amount, date, notes: notes || null };
+    closePayModal();
+    const match = findMatch(amount, client || null);
+    if (match) {
+      pendingMatchIds = match.combo.map(i => i.id);
+      document.getElementById('match-rows').innerHTML = match.combo.map(i =>
+        `<div class="match-inv-row" style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;">
+          <span style="font-weight:500;">${i.num}${i.client ? ' — ' + i.client : ''}</span>
+          <span style="color:var(--tx2);">${fmt(i.amount)}</span>
+        </div>`
+      ).join('');
+      document.getElementById('match-inv-total').textContent = fmt(match.sum);
+      document.getElementById('match-pay-amt').textContent = fmt(amount);
+      document.getElementById('match-diff').textContent = match.diff > 0.005 ? 'Difference: ' + fmt(match.diff) : '';
+      document.getElementById('match-modal').classList.add('open');
+    } else {
+      finalisePay(false);
+    }
+  }
+
+  async function confirmMatch() {
+    const btn = document.getElementById('match-confirm-btn');
+    btn.disabled = true;
+    document.getElementById('match-modal').classList.remove('open');
+    setStatus('Settling...', 'saving');
+    const { error } = await sb.from('invoices').update({ status: 'paid' }).in('id', pendingMatchIds);
+    if (error) { showError('Settle failed', error.message); setStatus('Failed', 'error'); btn.disabled = false; return; }
+    pendingMatchIds.forEach(id => { const inv = invoices.find(i => i.id === id); if (inv) inv.status = 'paid'; });
+    btn.disabled = false;
+    await finalisePay(true);
+  }
+
+  function declineMatch() {
+    document.getElementById('match-modal').classList.remove('open');
+    finalisePay(false);
+  }
+
+  async function finalisePay(settled) {
+    setStatus('Saving...', 'saving');
+    try {
+      const { data, error } = await sb.from('payments').insert({ ...pendingPay, settled }).select().single();
+      if (error) { showError('Payment save failed', error.message); setStatus('Failed', 'error'); return; }
+      payments.push(data);
+      pendingPay = null; pendingMatchIds = [];
+      clearError(); setStatus('Saved', 'saved'); render();
+    } catch (e) { showError('Payment save failed', e.message); setStatus('Failed', 'error'); }
+  }
+
+  async function delPay(id) {
+    if (!confirm('Delete this payment?')) return;
+    setStatus('Deleting...', 'saving');
+    const { error } = await sb.from('payments').delete().eq('id', id);
+    if (error) { showError('Delete failed', error.message); setStatus('Failed', 'error'); return; }
+    payments = payments.filter(p => p.id !== id);
+    setStatus('Deleted', 'saved'); render();
+  }
+
+  document.getElementById('search').addEventListener('input', render);
+  document.getElementById('filter').addEventListener('change', render);
+  document.getElementById('inv-modal').addEventListener('click', e => { if (e.target === document.getElementById('inv-modal')) closeInvModal(); });
+  document.getElementById('pay-modal').addEventListener('click', e => { if (e.target === document.getElementById('pay-modal')) closePayModal(); });
+
+  bindAmt('f-amount');
+  bindAmt('p-amount');
+
+  /* ── Bootstrap Supabase after CDN loads ── */
+  function initSupabase() {
+    if (typeof supabase === 'undefined' || typeof supabase.createClient === 'undefined') {
+      showError('Supabase library failed to load', 'Check your internet connection and reload the page.');
+      document.getElementById('inv-loading').style.display = 'none';
+      return;
+    }
+    sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    loadAll();
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" onload="initSupabase()" onerror="showError('Supabase CDN failed to load','Try reloading. If offline, the tracker cannot connect to the database.')"></script>
+</body>
+</html>
