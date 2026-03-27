@@ -31,9 +31,37 @@
       --warn-tx: #FAC775;
     }
   }
-  body { font-family: var(--font); background: var(--bg2); color: var(--tx); min-height: 100vh; padding: 2rem 1rem; }
+  body { font-family: var(--font); background: var(--bg2); color: var(--tx); min-height: 100vh; }
+
+  /* ── Login screen ── */
+  #login-screen {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 1rem;
+  }
+  .login-card {
+    background: var(--bg); border: 0.5px solid var(--bd2);
+    border-radius: var(--rl); padding: 2rem; width: 100%; max-width: 360px;
+  }
+  .login-card h2 { font-size: 18px; font-weight: 500; margin-bottom: 0.4rem; }
+  .login-card p { font-size: 13px; color: var(--tx2); margin-bottom: 1.5rem; }
+  .login-field { margin-bottom: 12px; }
+  .login-field label { display: block; font-size: 12px; color: var(--tx2); margin-bottom: 4px; }
+  .login-field input { width: 100%; padding: 8px 10px; border: 0.5px solid var(--bd2); border-radius: var(--r); font-size: 14px; background: var(--bg2); color: var(--tx); outline: none; font-family: inherit; }
+  .login-field input:focus { border-color: var(--teal); }
+  .login-btn { width: 100%; background: var(--teal); color: #fff; border: none; border-radius: var(--r); padding: 9px 16px; font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 6px; }
+  .login-btn:hover { background: var(--teal-dk); }
+  .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .login-error { font-size: 13px; color: var(--er-tx); background: var(--er-bg); border-radius: var(--r); padding: 8px 12px; margin-top: 12px; display: none; }
+
+  /* ── Main app ── */
+  #app-screen { display: none; padding: 2rem 1rem; }
   .container { max-width: 1040px; margin: 0 auto; }
-  h1 { font-size: 22px; font-weight: 500; margin-bottom: 1.5rem; }
+  .app-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px; }
+  .app-header h1 { font-size: 22px; font-weight: 500; }
+  .user-info { display: flex; align-items: center; gap: 10px; }
+  .user-email { font-size: 13px; color: var(--tx2); }
+  .logout-btn { background: none; border: 0.5px solid var(--bd2); border-radius: var(--r); padding: 5px 12px; font-size: 13px; cursor: pointer; color: var(--tx2); }
+  .logout-btn:hover { background: var(--bg2); }
 
   .summary { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; margin-bottom: 1.5rem; }
   .card { background: var(--bg); border-radius: var(--r); padding: 14px 16px; border: 0.5px solid var(--bd); }
@@ -52,6 +80,10 @@
   .add-btn.def:hover { background: var(--bg2); }
   .add-btn.teal { background: var(--teal-bg); color: var(--teal-tx); border: 0.5px solid var(--teal); }
   .add-btn.teal:hover { filter: brightness(0.95); }
+  .status-bar { font-size: 12px; padding: 6px 0; margin-left: auto; }
+  .status-bar.saving { color: var(--tx2); }
+  .status-bar.saved  { color: var(--ok-tx); }
+  .status-bar.error  { color: var(--er-tx); }
 
   .sec-title { font-size: 13px; font-weight: 500; color: var(--tx2); margin: 1.75rem 0 0.75rem; padding-bottom: 6px; border-bottom: 0.5px solid var(--bd); }
   table { width: 100%; border-collapse: collapse; font-size: 14px; }
@@ -72,17 +104,9 @@
   .act { background: none; border: none; cursor: pointer; padding: 4px 8px; border-radius: 6px; font-size: 12px; color: var(--tx2); }
   .act:hover { background: var(--bg2); color: var(--tx); }
   .act.danger { color: var(--er-tx); }
-
   .empty { text-align: center; padding: 1.5rem; color: var(--tx3); font-size: 14px; }
-  .status-bar { font-size: 12px; padding: 6px 0; margin-left: auto; }
-  .status-bar.saving { color: var(--tx2); }
-  .status-bar.saved  { color: var(--ok-tx); }
-  .status-bar.error  { color: var(--er-tx); }
-
   .error-box { background: var(--er-bg); border: 0.5px solid var(--er-tx); border-radius: var(--r); padding: 12px 16px; margin-bottom: 1rem; font-size: 13px; color: var(--er-tx); }
   .error-box strong { font-weight: 500; display: block; margin-bottom: 4px; }
-  .error-box code { font-family: monospace; font-size: 12px; background: rgba(0,0,0,0.06); padding: 2px 5px; border-radius: 3px; }
-
   .loading { display: flex; align-items: center; gap: 10px; padding: 2rem; color: var(--tx2); font-size: 14px; }
   .spinner { width: 18px; height: 18px; border: 2px solid var(--bd2); border-top-color: var(--teal); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
   @keyframes spin { to { transform: rotate(360deg); } }
@@ -120,46 +144,74 @@
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>Invoice tracker</h1>
 
-  <div id="error-area"></div>
-
-  <div class="summary">
-    <div class="card"><div class="card-label">Total invoices</div><div class="card-value" id="s-total">—</div></div>
-    <div class="card"><div class="card-label">Total invoiced</div><div class="card-value" id="s-value">—</div></div>
-    <div class="card"><div class="card-label">Paid (invoices)</div><div class="card-value green" id="s-paid">—</div></div>
-    <div class="card"><div class="card-label">Payments received</div><div class="card-value teal" id="s-received">—</div></div>
+<!-- ── Login screen ── -->
+<div id="login-screen">
+  <div class="login-card">
+    <h2>Invoice tracker</h2>
+    <p>Sign in to access your invoices</p>
+    <div class="login-field">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email" />
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" />
+    </div>
+    <button class="login-btn" id="login-btn" onclick="doLogin()">Sign in</button>
+    <div class="login-error" id="login-error"></div>
   </div>
+</div>
 
-  <div class="panel">
-    <div class="toolbar">
-      <input type="text" id="search" placeholder="Search client, invoice # or remarks..." />
-      <select id="filter">
-        <option value="">All statuses</option>
-        <option value="draft">Draft</option>
-        <option value="sent">Sent</option>
-        <option value="overdue">Overdue</option>
-        <option value="paid">Paid</option>
-      </select>
-      <button class="add-btn def" onclick="openInvModal()">+ New invoice</button>
-      <button class="add-btn teal" onclick="openPayModal()">+ Add payment received</button>
-      <span class="status-bar" id="status-bar"></span>
+<!-- ── Main app ── -->
+<div id="app-screen">
+  <div class="container">
+    <div class="app-header">
+      <h1>Invoice tracker</h1>
+      <div class="user-info">
+        <span class="user-email" id="user-email"></span>
+        <button class="logout-btn" onclick="doLogout()">Sign out</button>
+      </div>
     </div>
 
-    <div id="inv-loading" class="loading"><div class="spinner"></div> Connecting to database...</div>
-    <table id="inv-table" style="display:none;">
-      <thead><tr><th>Invoice #</th><th>Client</th><th>Amount</th><th>Issue date</th><th>Due date</th><th>Remarks</th><th>Status</th><th></th></tr></thead>
-      <tbody id="inv-list"></tbody>
-    </table>
-    <div class="empty" id="inv-empty" style="display:none;">No invoices found. Add one to get started.</div>
+    <div id="error-area"></div>
 
-    <div class="sec-title">Payments received</div>
-    <table id="pay-table" style="display:none;">
-      <thead><tr><th>Reference</th><th>Client</th><th>Amount</th><th>Date</th><th>Notes</th><th>Status</th><th></th></tr></thead>
-      <tbody id="pay-list"></tbody>
-    </table>
-    <div class="empty" id="pay-empty" style="display:none;">No payments recorded yet.</div>
+    <div class="summary">
+      <div class="card"><div class="card-label">Total invoices</div><div class="card-value" id="s-total">—</div></div>
+      <div class="card"><div class="card-label">Total invoiced</div><div class="card-value" id="s-value">—</div></div>
+      <div class="card"><div class="card-label">Paid (invoices)</div><div class="card-value green" id="s-paid">—</div></div>
+      <div class="card"><div class="card-label">Payments received</div><div class="card-value teal" id="s-received">—</div></div>
+    </div>
+
+    <div class="panel">
+      <div class="toolbar">
+        <input type="text" id="search" placeholder="Search client, invoice # or remarks..." />
+        <select id="filter">
+          <option value="">All statuses</option>
+          <option value="draft">Draft</option>
+          <option value="sent">Sent</option>
+          <option value="overdue">Overdue</option>
+          <option value="paid">Paid</option>
+        </select>
+        <button class="add-btn def" onclick="openInvModal()">+ New invoice</button>
+        <button class="add-btn teal" onclick="openPayModal()">+ Add payment received</button>
+        <span class="status-bar" id="status-bar"></span>
+      </div>
+
+      <div id="inv-loading" class="loading"><div class="spinner"></div> Loading invoices...</div>
+      <table id="inv-table" style="display:none;">
+        <thead><tr><th>Invoice #</th><th>Client</th><th>Amount</th><th>Issue date</th><th>Due date</th><th>Remarks</th><th>Status</th><th></th></tr></thead>
+        <tbody id="inv-list"></tbody>
+      </table>
+      <div class="empty" id="inv-empty" style="display:none;">No invoices found. Add one to get started.</div>
+
+      <div class="sec-title">Payments received</div>
+      <table id="pay-table" style="display:none;">
+        <thead><tr><th>Reference</th><th>Client</th><th>Amount</th><th>Date</th><th>Notes</th><th>Status</th><th></th></tr></thead>
+        <tbody id="pay-list"></tbody>
+      </table>
+      <div class="empty" id="pay-empty" style="display:none;">No payments recorded yet.</div>
+    </div>
   </div>
 </div>
 
@@ -219,7 +271,7 @@
     <div class="form-row"><label>Notes <span class="opt">optional</span></label><input type="text" id="p-notes" placeholder="e.g. Bank transfer for INV-003" /></div>
     <div class="form-actions">
       <button class="btn-cancel" onclick="closePayModal()">Cancel</button>
-      <button class="btn-save btn-teal" id="pay-save-btn" onclick="submitPayment()">Save payment</button>
+      <button class="btn-save btn-teal" onclick="submitPayment()">Save payment</button>
     </div>
   </div>
 </div>
@@ -257,12 +309,51 @@
   let invoices = [], payments = [];
   let editId = null, pendingPay = null, pendingMatchIds = [];
 
+  /* ── Auth ── */
+  async function doLogin() {
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const btn = document.getElementById('login-btn');
+    const errEl = document.getElementById('login-error');
+    if (!email || !password) return;
+
+    btn.disabled = true;
+    btn.textContent = 'Signing in...';
+    errEl.style.display = 'none';
+
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) {
+      errEl.textContent = error.message;
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Sign in';
+    }
+  }
+
+  async function doLogout() {
+    await sb.auth.signOut();
+  }
+
+  function showApp(session) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app-screen').style.display = 'block';
+    document.getElementById('user-email').textContent = session.user.email;
+    loadAll();
+  }
+
+  function showLogin() {
+    document.getElementById('app-screen').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('login-btn').disabled = false;
+    document.getElementById('login-btn').textContent = 'Sign in';
+    document.getElementById('login-error').style.display = 'none';
+    invoices = []; payments = [];
+  }
+
+  /* ── Utilities ── */
   function showError(title, detail) {
-    document.getElementById('error-area').innerHTML = `
-      <div class="error-box">
-        <strong>${title}</strong>
-        ${detail ? `<span>${detail}</span>` : ''}
-      </div>`;
+    document.getElementById('error-area').innerHTML =
+      `<div class="error-box"><strong>${title}</strong>${detail ? '<span>' + detail + '</span>' : ''}</div>`;
   }
   function clearError() { document.getElementById('error-area').innerHTML = ''; }
 
@@ -317,15 +408,15 @@
     list.forEach(inv => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td style="font-weight:500;">${inv.num || ''}</td>
-        <td>${inv.client || ''}</td>
+        <td style="font-weight:500;">${inv.num||''}</td>
+        <td>${inv.client||''}</td>
         <td>${fmt(inv.amount)}</td>
-        <td style="color:var(--tx2);">${inv.issue || ''}</td>
-        <td style="color:var(--tx2);">${inv.due || ''}</td>
-        <td class="rmk" title="${(inv.remarks||'').replace(/"/g,'&quot;')}">${inv.remarks || '<span style="color:var(--tx3)">—</span>'}</td>
-        <td>${sBadge(inv.status || 'draft')}</td>
+        <td style="color:var(--tx2);">${inv.issue||''}</td>
+        <td style="color:var(--tx2);">${inv.due||''}</td>
+        <td class="rmk" title="${(inv.remarks||'').replace(/"/g,'&quot;')}">${inv.remarks||'<span style="color:var(--tx3)">—</span>'}</td>
+        <td>${sBadge(inv.status||'draft')}</td>
         <td>
-          ${inv.status !== 'paid' ? `<button class="act" onclick="markPaid(${inv.id})">Mark paid</button>` : ''}
+          ${inv.status!=='paid'?`<button class="act" onclick="markPaid(${inv.id})">Mark paid</button>`:''}
           <button class="act" onclick="editInv(${inv.id})">Edit</button>
           <button class="act danger" onclick="delInv(${inv.id})">Delete</button>
         </td>`;
@@ -341,12 +432,12 @@
     pl.forEach(p => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td style="font-weight:500;">${p.ref || '<span style="color:var(--tx3)">—</span>'}</td>
-        <td>${p.client || '<span style="color:var(--tx3)">—</span>'}</td>
+        <td style="font-weight:500;">${p.ref||'<span style="color:var(--tx3)">—</span>'}</td>
+        <td>${p.client||'<span style="color:var(--tx3)">—</span>'}</td>
         <td style="color:var(--teal-dk);font-weight:500;">${fmt(p.amount)}</td>
-        <td style="color:var(--tx2);">${p.date || ''}</td>
-        <td style="color:var(--tx2);">${p.notes || '—'}</td>
-        <td><span class="badge ${p.settled ? 'b-settled' : 'b-unmatched'}">${p.settled ? 'Settled' : 'Unmatched'}</span></td>
+        <td style="color:var(--tx2);">${p.date||''}</td>
+        <td style="color:var(--tx2);">${p.notes||'—'}</td>
+        <td><span class="badge ${p.settled?'b-settled':'b-unmatched'}">${p.settled?'Settled':'Unmatched'}</span></td>
         <td><button class="act danger" onclick="delPay(${p.id})">Delete</button></td>`;
       pb.appendChild(tr);
     });
@@ -356,44 +447,26 @@
 
   async function loadAll() {
     clearError();
-    setStatus('Connecting...', 'saving');
-
+    setStatus('Loading...', 'saving');
     try {
       const [invRes, payRes] = await Promise.all([
         sb.from('invoices').select('*').order('id', { ascending: true }),
         sb.from('payments').select('*').order('id', { ascending: true })
       ]);
-
-      if (invRes.error) {
-        showError('Could not load invoices', `Error: ${invRes.error.message} (code: ${invRes.error.code})`);
-        setStatus('Load failed', 'error');
-        document.getElementById('inv-loading').style.display = 'none';
-        document.getElementById('inv-empty').style.display = 'block';
-        document.getElementById('inv-empty').textContent = 'Could not load data. See error above.';
-        return;
-      }
-      if (payRes.error) {
-        showError('Could not load payments', `Error: ${payRes.error.message} (code: ${payRes.error.code})`);
-      }
-
+      if (invRes.error) { showError('Could not load invoices', invRes.error.message); setStatus('Failed', 'error'); return; }
+      if (payRes.error) { showError('Could not load payments', payRes.error.message); setStatus('Failed', 'error'); return; }
       invoices = invRes.data || [];
       payments = payRes.data || [];
-      setStatus('');
-      clearError();
-      render();
-    } catch (err) {
-      showError('Connection failed', `Could not reach Supabase. Check your internet connection. (${err.message})`);
-      setStatus('Connection failed', 'error');
-      document.getElementById('inv-loading').style.display = 'none';
-    }
+      clearError(); setStatus(''); render();
+    } catch (e) { showError('Connection failed', e.message); setStatus('Failed', 'error'); }
   }
 
   /* ── Invoice CRUD ── */
   function openInvModal() {
     editId = null;
     document.getElementById('inv-title').textContent = 'New invoice';
-    const t = new Date().toISOString().slice(0, 10);
-    const d = new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10);
+    const t = new Date().toISOString().slice(0,10);
+    const d = new Date(Date.now()+30*86400000).toISOString().slice(0,10);
     document.getElementById('f-num').value = '';
     document.getElementById('f-client').value = '';
     document.getElementById('f-amount').value = '';
@@ -407,13 +480,13 @@
     editId = id;
     const inv = invoices.find(i => i.id === id);
     document.getElementById('inv-title').textContent = 'Edit invoice';
-    document.getElementById('f-num').value = inv.num || '';
-    document.getElementById('f-client').value = inv.client || '';
+    document.getElementById('f-num').value = inv.num||'';
+    document.getElementById('f-client').value = inv.client||'';
     document.getElementById('f-amount').value = fmtD(inv.amount);
-    document.getElementById('f-issue').value = inv.issue || '';
-    document.getElementById('f-due').value = inv.due || '';
-    document.getElementById('f-remarks').value = inv.remarks || '';
-    document.getElementById('f-status').value = inv.status || 'sent';
+    document.getElementById('f-issue').value = inv.issue||'';
+    document.getElementById('f-due').value = inv.due||'';
+    document.getElementById('f-remarks').value = inv.remarks||'';
+    document.getElementById('f-status').value = inv.status||'sent';
     document.getElementById('inv-modal').classList.add('open');
   }
   function closeInvModal() { document.getElementById('inv-modal').classList.remove('open'); }
@@ -427,12 +500,8 @@
     const remarks = document.getElementById('f-remarks').value.trim();
     const status = document.getElementById('f-status').value;
     if (!num || !client || !issue || !due) return;
-
     const btn = document.getElementById('inv-save-btn');
-    btn.disabled = true;
-    closeInvModal();
-    setStatus('Saving...', 'saving');
-
+    btn.disabled = true; closeInvModal(); setStatus('Saving...', 'saving');
     const payload = { num, client, amount, issue, due, remarks, status };
     try {
       let error, data;
@@ -443,9 +512,9 @@
         ({ data, error } = await sb.from('invoices').insert(payload).select().single());
         if (!error) invoices.push(data);
       }
-      if (error) { showError('Save failed', error.message); setStatus('Save failed', 'error'); }
+      if (error) { showError('Save failed', error.message); setStatus('Failed', 'error'); }
       else { clearError(); setStatus('Saved', 'saved'); render(); }
-    } catch (e) { showError('Save failed', e.message); setStatus('Save failed', 'error'); }
+    } catch(e) { showError('Save failed', e.message); setStatus('Failed', 'error'); }
     btn.disabled = false;
   }
 
@@ -475,7 +544,7 @@
     let best = null;
     for (let mask = 1; mask < (1 << n); mask++) {
       const combo = []; let sum = 0;
-      for (let b = 0; b < n; b++) { if (mask & (1 << b)) { combo.push(cands[b]); sum += Number(cands[b].amount); } }
+      for (let b = 0; b < n; b++) { if (mask & (1<<b)) { combo.push(cands[b]); sum += Number(cands[b].amount); } }
       const diff = Math.abs(sum - payAmt);
       if (diff <= TOLERANCE) {
         if (!best || combo.length < best.combo.length || (combo.length === best.combo.length && diff < best.diff))
@@ -490,7 +559,7 @@
     document.getElementById('p-ref').value = '';
     document.getElementById('p-client').value = '';
     document.getElementById('p-amount').value = '';
-    document.getElementById('p-date').value = new Date().toISOString().slice(0, 10);
+    document.getElementById('p-date').value = new Date().toISOString().slice(0,10);
     document.getElementById('p-notes').value = '';
     document.getElementById('pay-modal').classList.add('open');
   }
@@ -503,24 +572,19 @@
     const date = document.getElementById('p-date').value;
     const notes = document.getElementById('p-notes').value.trim();
     if (!amount || !date) return;
-    pendingPay = { ref: ref || null, client: client || null, amount, date, notes: notes || null };
+    pendingPay = { ref: ref||null, client: client||null, amount, date, notes: notes||null };
     closePayModal();
-    const match = findMatch(amount, client || null);
+    const match = findMatch(amount, client||null);
     if (match) {
       pendingMatchIds = match.combo.map(i => i.id);
       document.getElementById('match-rows').innerHTML = match.combo.map(i =>
-        `<div class="match-inv-row" style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;">
-          <span style="font-weight:500;">${i.num}${i.client ? ' — ' + i.client : ''}</span>
-          <span style="color:var(--tx2);">${fmt(i.amount)}</span>
-        </div>`
+        `<div class="match-inv-row"><span style="font-weight:500;">${i.num}${i.client?' — '+i.client:''}</span><span style="color:var(--tx2);">${fmt(i.amount)}</span></div>`
       ).join('');
       document.getElementById('match-inv-total').textContent = fmt(match.sum);
       document.getElementById('match-pay-amt').textContent = fmt(amount);
       document.getElementById('match-diff').textContent = match.diff > 0.005 ? 'Difference: ' + fmt(match.diff) : '';
       document.getElementById('match-modal').classList.add('open');
-    } else {
-      finalisePay(false);
-    }
+    } else { finalisePay(false); }
   }
 
   async function confirmMatch() {
@@ -548,7 +612,7 @@
       payments.push(data);
       pendingPay = null; pendingMatchIds = [];
       clearError(); setStatus('Saved', 'saved'); render();
-    } catch (e) { showError('Payment save failed', e.message); setStatus('Failed', 'error'); }
+    } catch(e) { showError('Payment save failed', e.message); setStatus('Failed', 'error'); }
   }
 
   async function delPay(id) {
@@ -562,23 +626,30 @@
 
   document.getElementById('search').addEventListener('input', render);
   document.getElementById('filter').addEventListener('change', render);
-  document.getElementById('inv-modal').addEventListener('click', e => { if (e.target === document.getElementById('inv-modal')) closeInvModal(); });
-  document.getElementById('pay-modal').addEventListener('click', e => { if (e.target === document.getElementById('pay-modal')) closePayModal(); });
+  document.getElementById('inv-modal').addEventListener('click', e => { if(e.target===document.getElementById('inv-modal')) closeInvModal(); });
+  document.getElementById('pay-modal').addEventListener('click', e => { if(e.target===document.getElementById('pay-modal')) closePayModal(); });
+  document.getElementById('login-password').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 
   bindAmt('f-amount');
   bindAmt('p-amount');
 
-  /* ── Bootstrap Supabase after CDN loads ── */
   function initSupabase() {
-    if (typeof supabase === 'undefined' || typeof supabase.createClient === 'undefined') {
-      showError('Supabase library failed to load', 'Check your internet connection and reload the page.');
-      document.getElementById('inv-loading').style.display = 'none';
+    if (typeof supabase === 'undefined') {
+      document.getElementById('login-screen').innerHTML = '<div style="padding:2rem;color:var(--er-tx);">Supabase failed to load. Check your internet connection and reload.</div>';
       return;
     }
     sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    loadAll();
+
+    sb.auth.onAuthStateChange((event, session) => {
+      if (session) { showApp(session); }
+      else { showLogin(); }
+    });
+
+    sb.auth.getSession().then(({ data: { session } }) => {
+      if (session) { showApp(session); }
+    });
   }
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" onload="initSupabase()" onerror="showError('Supabase CDN failed to load','Try reloading. If offline, the tracker cannot connect to the database.')"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" onload="initSupabase()" onerror="document.getElementById('login-screen').innerHTML='<div style=padding:2rem;color:var(--er-tx)>Supabase CDN failed to load. Check your internet connection.</div>'"></script>
 </body>
 </html>
