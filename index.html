@@ -15,6 +15,7 @@
     --info-bg: #E6F1FB; --info-tx: #0C447C;
     --neu-bg: #F1EFE8; --neu-tx: #444441;
     --teal-bg: #E1F5EE; --teal-tx: #085041; --teal: #1D9E75; --teal-dk: #0F6E56;
+    --amber-bg: #FAEEDA; --amber-tx: #633806; --amber: #BA7517;
     --warn-tx: #633806;
     --r: 8px; --rl: 12px; --font: system-ui,-apple-system,sans-serif;
   }
@@ -28,32 +29,27 @@
       --info-bg: #061b2e; --info-tx: #85b7eb;
       --neu-bg: #2a2a28; --neu-tx: #b4b2a9;
       --teal-bg: #04342C; --teal-tx: #9FE1CB; --teal: #1D9E75; --teal-dk: #5DCAA5;
+      --amber-bg: #2e1f06; --amber-tx: #FAC775; --amber: #EF9F27;
       --warn-tx: #FAC775;
     }
   }
   body { font-family: var(--font); background: var(--bg2); color: var(--tx); min-height: 100vh; }
 
-  /* ── Login screen ── */
-  #login-screen {
-    display: flex; align-items: center; justify-content: center;
-    min-height: 100vh; padding: 1rem;
-  }
-  .login-card {
-    background: var(--bg); border: 0.5px solid var(--bd2);
-    border-radius: var(--rl); padding: 2rem; width: 100%; max-width: 360px;
-  }
+  /* ── Login ── */
+  #login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1rem; }
+  .login-card { background: var(--bg); border: 0.5px solid var(--bd2); border-radius: var(--rl); padding: 2rem; width: 100%; max-width: 360px; }
   .login-card h2 { font-size: 18px; font-weight: 500; margin-bottom: 0.4rem; }
   .login-card p { font-size: 13px; color: var(--tx2); margin-bottom: 1.5rem; }
   .login-field { margin-bottom: 12px; }
   .login-field label { display: block; font-size: 12px; color: var(--tx2); margin-bottom: 4px; }
-  .login-field input { width: 100%; padding: 8px 10px; border: 0.5px solid var(--bd2); border-radius: var(--r); font-size: 14px; background: var(--bg2); color: var(--tx); outline: none; font-family: inherit; }
+  .login-field input { width: 100%; padding: 8px 10px; border: 0.5px solid var(--bd2); border-radius: var(--r); font-size: 14px; background: var(--bg2); color: var(--tx); outline: none; }
   .login-field input:focus { border-color: var(--teal); }
   .login-btn { width: 100%; background: var(--teal); color: #fff; border: none; border-radius: var(--r); padding: 9px 16px; font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 6px; }
   .login-btn:hover { background: var(--teal-dk); }
   .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
   .login-error { font-size: 13px; color: var(--er-tx); background: var(--er-bg); border-radius: var(--r); padding: 8px 12px; margin-top: 12px; display: none; }
 
-  /* ── Main app ── */
+  /* ── App ── */
   #app-screen { display: none; padding: 2rem 1rem; }
   .container { max-width: 1040px; margin: 0 auto; }
   .app-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px; }
@@ -75,11 +71,14 @@
   .toolbar input[type=text] { flex: 1; min-width: 160px; padding: 7px 12px; border: 0.5px solid var(--bd2); border-radius: var(--r); font-size: 14px; background: var(--bg2); color: var(--tx); outline: none; }
   .toolbar input[type=text]:focus { border-color: var(--tx2); }
   .toolbar select { padding: 7px 12px; border: 0.5px solid var(--bd2); border-radius: var(--r); font-size: 14px; background: var(--bg2); color: var(--tx); outline: none; cursor: pointer; }
-  .add-btn { border-radius: var(--r); padding: 7px 14px; font-size: 14px; cursor: pointer; font-weight: 500; white-space: nowrap; }
+  .add-btn { border-radius: var(--r); padding: 7px 14px; font-size: 14px; cursor: pointer; font-weight: 500; white-space: nowrap; border: none; }
   .add-btn.def { background: var(--bg); color: var(--tx); border: 0.5px solid var(--bd2); }
   .add-btn.def:hover { background: var(--bg2); }
   .add-btn.teal { background: var(--teal-bg); color: var(--teal-tx); border: 0.5px solid var(--teal); }
   .add-btn.teal:hover { filter: brightness(0.95); }
+  .add-btn.amber { background: var(--amber-bg); color: var(--amber-tx); border: 0.5px solid var(--amber); }
+  .add-btn.amber:hover { filter: brightness(0.95); }
+  .add-btn:disabled { opacity: 0.5; cursor: not-allowed; }
   .status-bar { font-size: 12px; padding: 6px 0; margin-left: auto; }
   .status-bar.saving { color: var(--tx2); }
   .status-bar.saved  { color: var(--ok-tx); }
@@ -111,6 +110,7 @@
   .spinner { width: 18px; height: 18px; border: 2px solid var(--bd2); border-top-color: var(--teal); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* ── Modals ── */
   .modal-wrap { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; align-items: flex-start; justify-content: center; padding-top: 40px; overflow-y: auto; }
   .modal-wrap.open { display: flex; }
   .modal { background: var(--bg); border-radius: var(--rl); border: 0.5px solid var(--bd2); padding: 1.5rem; width: 100%; max-width: 460px; margin: 0 1rem 2rem; }
@@ -130,12 +130,35 @@
   .btn-dark { background: var(--tx); color: var(--bg); }
   .btn-teal { background: var(--teal); color: #fff; }
   .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
-
   .match-box { border: 0.5px solid var(--bd2); border-radius: var(--r); padding: 12px 14px; margin-bottom: 12px; background: var(--bg2); }
   .match-box-title { font-size: 12px; font-weight: 500; color: var(--tx2); margin-bottom: 8px; }
   .match-inv-row { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; }
   .match-sum { display: flex; justify-content: space-between; font-size: 13px; padding-top: 8px; margin-top: 6px; border-top: 0.5px solid var(--bd); }
   .match-diff { font-size: 12px; color: var(--warn-tx); margin-top: 4px; text-align: right; }
+
+  /* ── Tracked emails module ── */
+  .tracked-section { background: var(--bg); border-radius: var(--rl); border: 0.5px solid var(--bd); padding: 1.25rem; margin-bottom: 1.5rem; }
+  .tracked-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .tracked-title { font-size: 14px; font-weight: 500; }
+  .tracked-subtitle { font-size: 12px; color: var(--tx2); margin-top: 2px; }
+  .tracked-add-row { display: flex; gap: 8px; margin-bottom: 1rem; }
+  .tracked-add-row input { flex: 1; padding: 7px 10px; border: 0.5px solid var(--bd2); border-radius: var(--r); font-size: 14px; background: var(--bg2); color: var(--tx); outline: none; }
+  .tracked-add-row input:focus { border-color: var(--teal); }
+  .tracked-add-row select { padding: 7px 10px; border: 0.5px solid var(--bd2); border-radius: var(--r); font-size: 14px; background: var(--bg2); color: var(--tx); outline: none; min-width: 120px; }
+  .tracked-add-btn { background: var(--teal); color: #fff; border: none; border-radius: var(--r); padding: 7px 14px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; }
+  .tracked-add-btn:hover { background: var(--teal-dk); }
+  .tracked-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tracked-chip { display: flex; align-items: center; gap: 6px; background: var(--bg2); border: 0.5px solid var(--bd2); border-radius: 99px; padding: 4px 10px 4px 12px; font-size: 13px; }
+  .tracked-chip-email { color: var(--tx); }
+  .tracked-chip-client { font-size: 11px; color: var(--tx2); margin-left: 2px; }
+  .tracked-chip-del { background: none; border: none; cursor: pointer; color: var(--tx3); font-size: 16px; line-height: 1; padding: 0 2px; }
+  .tracked-chip-del:hover { color: var(--er-tx); }
+  .tracked-empty { font-size: 13px; color: var(--tx3); padding: 4px 0; }
+
+  /* ── Invoice email card (different from payment card) ── */
+  .inv-email-card { background: var(--bg); border: 0.5px solid var(--bd2); border-radius: var(--r); padding: 1rem 1.1rem; margin-bottom: 10px; }
+  .inv-email-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+  .inv-email-badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 99px; background: var(--info-bg); color: var(--info-tx); margin-top: 3px; }
 
   @media (max-width: 640px) {
     .summary { grid-template-columns: repeat(2, 1fr); }
@@ -145,25 +168,19 @@
 </head>
 <body>
 
-<!-- ── Login screen ── -->
+<!-- Login -->
 <div id="login-screen">
   <div class="login-card">
     <h2>Invoice tracker</h2>
     <p>Sign in to access your invoices</p>
-    <div class="login-field">
-      <label>Email</label>
-      <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email" />
-    </div>
-    <div class="login-field">
-      <label>Password</label>
-      <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" />
-    </div>
+    <div class="login-field"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com" autocomplete="email" /></div>
+    <div class="login-field"><label>Password</label><input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" /></div>
     <button class="login-btn" id="login-btn" onclick="doLogin()">Sign in</button>
     <div class="login-error" id="login-error"></div>
   </div>
 </div>
 
-<!-- ── Main app ── -->
+<!-- App -->
 <div id="app-screen">
   <div class="container">
     <div class="app-header">
@@ -183,6 +200,31 @@
       <div class="card"><div class="card-label">Payments received</div><div class="card-value teal" id="s-received">—</div></div>
     </div>
 
+    <!-- Tracked Emails -->
+    <div class="tracked-section" id="tracked-section" style="display:none;">
+      <div class="tracked-header">
+        <div>
+          <div class="tracked-title">Tracked emails</div>
+          <div class="tracked-subtitle">Gmail sync will only scan invoices from these senders</div>
+        </div>
+        <button onclick="document.getElementById('tracked-section').style.display='none'" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--tx3);line-height:1;">×</button>
+      </div>
+      <div class="tracked-add-row">
+        <input type="email" id="te-email" placeholder="sender@example.com" />
+        <select id="te-client">
+          <option value="">No client link</option>
+          <option value="CFI">CFI</option>
+          <option value="Jolex">Jolex</option>
+          <option value="KSV">KSV</option>
+          <option value="GOT SG">GOT SG</option>
+        </select>
+        <button class="tracked-add-btn" onclick="addTrackedEmail()">+ Add</button>
+      </div>
+      <div class="tracked-list" id="tracked-list">
+        <span class="tracked-empty" id="tracked-empty">No senders tracked yet. Add one above.</span>
+      </div>
+    </div>
+
     <div class="panel">
       <div class="toolbar">
         <input type="text" id="search" placeholder="Search client, invoice # or remarks..." />
@@ -194,23 +236,105 @@
           <option value="paid">Paid</option>
         </select>
         <button class="add-btn def" onclick="openInvModal()">+ New invoice</button>
+        <button class="add-btn" onclick="openPdfModal()" style="background:var(--info-bg);color:var(--info-tx);border:0.5px solid var(--info-tx);">Upload PDF invoice</button>
         <button class="add-btn teal" onclick="openPayModal()">+ Add payment received</button>
+        <button class="add-btn amber" id="sync-btn" onclick="openSyncInfoModal()">Sync from Gmail</button>
+        <button onclick="toggleTrackedSection()" style="background:none;border:0.5px solid var(--bd2);border-radius:var(--r);padding:6px 12px;font-size:13px;cursor:pointer;color:var(--tx2);white-space:nowrap;">Tracked emails <span id="tracked-count" style="font-weight:500;color:var(--tx);">0</span></button>
         <span class="status-bar" id="status-bar"></span>
       </div>
 
-      <div id="inv-loading" class="loading"><div class="spinner"></div> Loading invoices...</div>
+      <div id="inv-loading" class="loading"><div class="spinner"></div> Loading...</div>
       <table id="inv-table" style="display:none;">
         <thead><tr><th>Invoice #</th><th>Client</th><th>Amount</th><th>Issue date</th><th>Due date</th><th>Remarks</th><th>Status</th><th></th></tr></thead>
         <tbody id="inv-list"></tbody>
       </table>
       <div class="empty" id="inv-empty" style="display:none;">No invoices found. Add one to get started.</div>
 
-      <div class="sec-title">Payments received</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin:1.75rem 0 0.75rem;padding-bottom:6px;border-bottom:0.5px solid var(--bd);">
+        <span style="font-size:13px;font-weight:500;color:var(--tx2);">Payments received</span>
+        <button onclick="startRescanSettlement()" style="background:var(--info-bg);color:var(--info-tx);border:0.5px solid var(--info-tx);border-radius:var(--r);padding:4px 12px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;">Re-Scan Settlement</button>
+      </div>
       <table id="pay-table" style="display:none;">
         <thead><tr><th>Reference</th><th>Client</th><th>Amount</th><th>Date</th><th>Notes</th><th>Status</th><th></th></tr></thead>
         <tbody id="pay-list"></tbody>
       </table>
       <div class="empty" id="pay-empty" style="display:none;">No payments recorded yet.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PDF upload modal -->
+<div class="modal-wrap" id="pdf-modal">
+  <div class="modal" style="max-width:440px;">
+    <h3>Upload invoice PDF</h3>
+    <p style="font-size:13px;color:var(--tx2);line-height:1.6;margin-bottom:1rem;">PDF extraction runs through Claude — it can't connect to the AI directly from this page due to browser security restrictions.</p>
+    <p style="font-size:13px;color:var(--tx2);line-height:1.6;margin-bottom:1rem;">To extract an invoice from a PDF:</p>
+    <ol style="font-size:13px;color:var(--tx2);line-height:2;padding-left:1.25rem;margin-bottom:1.25rem;">
+      <li>Open your Claude chat</li>
+      <li>Upload the PDF file directly in the chat</li>
+      <li>Say <span style="font-family:monospace;background:var(--bg2);padding:1px 6px;border-radius:4px;color:var(--tx);">Extract invoice from this PDF</span></li>
+      <li>Claude will extract the details and save the invoice to your tracker automatically</li>
+    </ol>
+    <div style="background:var(--info-bg);border-radius:var(--r);padding:10px 14px;margin-bottom:1rem;font-size:13px;color:var(--info-tx);">
+      You can also manually enter the invoice details using the <strong>+ New invoice</strong> button while you wait.
+    </div>
+    <div class="form-actions">
+      <button class="btn-save btn-dark" onclick="closePdfModal()">Got it</button>
+    </div>
+  </div>
+</div>
+
+<!-- PDF extraction confirmation modal -->
+<div class="modal-wrap" id="pdf-confirm-modal">
+  <div class="modal" style="max-width:520px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+      <h3 style="margin:0;">Review extracted details</h3>
+      <span style="font-size:11px;font-weight:500;padding:2px 8px;border-radius:99px;background:var(--ok-bg);color:var(--ok-tx);">From PDF</span>
+    </div>
+    <p style="font-size:13px;color:var(--tx2);margin-bottom:1.25rem;">Review and edit the extracted fields before saving.</p>
+    <div id="pdf-source-info" style="background:var(--bg2);border-radius:var(--r);padding:8px 12px;margin-bottom:1rem;font-size:12px;color:var(--tx2);"></div>
+    <div class="form-row"><label>Invoice #</label><input type="text" id="pf-num" placeholder="INV-001" /></div>
+    <div class="form-row"><label>Client</label>
+      <select id="pf-client">
+        <option value="">Select client...</option>
+        <option value="CFI">CFI</option>
+        <option value="Jolex">Jolex</option>
+        <option value="KSV">KSV</option>
+        <option value="GOT SG">GOT SG</option>
+      </select>
+    </div>
+    <div class="form-row"><label>Amount ($)</label>
+      <div class="amt-wrap"><span class="amt-pre">$</span><input type="text" id="pf-amount" placeholder="0.00" inputmode="decimal" /></div>
+    </div>
+    <div class="form-row"><label>Issue date</label><input type="date" id="pf-issue" /></div>
+    <div class="form-row"><label>Due date</label><input type="date" id="pf-due" /></div>
+    <div class="form-row"><label>Remarks</label><textarea id="pf-remarks" placeholder="e.g. Consulting services for Q1 2026"></textarea></div>
+    <div class="form-row"><label>Status</label>
+      <select id="pf-status">
+        <option value="draft">Draft</option>
+        <option value="sent" selected>Sent</option>
+        <option value="overdue">Overdue</option>
+        <option value="paid">Paid</option>
+      </select>
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closePdfConfirmModal()">Cancel</button>
+      <button class="btn-cancel" onclick="reopenPdfUpload()" style="margin-right:auto;">&#8592; Re-upload</button>
+      <button class="btn-save btn-dark" id="pf-save-btn" onclick="savePdfInvoice()">Save invoice</button>
+    </div>
+  </div>
+</div>
+
+<!-- Duplicate invoice warning modal -->
+<div class="modal-wrap" id="dup-modal">
+  <div class="modal" style="max-width:420px;">
+    <h3 style="color:var(--warn-tx);">Duplicate invoice number</h3>
+    <p style="font-size:13px;color:var(--tx2);margin:8px 0 1rem;">An invoice with this number already exists in the system:</p>
+    <div id="dup-existing" style="background:var(--bg2);border-radius:var(--r);border:0.5px solid var(--bd2);padding:12px 14px;margin-bottom:1rem;font-size:13px;"></div>
+    <p style="font-size:13px;color:var(--tx2);margin-bottom:1rem;">Do you still want to save this as a new invoice?</p>
+    <div class="form-actions">
+      <button class="btn-cancel" id="dup-cancel-btn" onclick="closeDupModal()">Cancel — go back</button>
+      <button class="btn-save" id="dup-proceed-btn" style="background:var(--warn-tx);color:#fff;" onclick="proceedDespiteDuplicate()">Save anyway</button>
     </div>
   </div>
 </div>
@@ -276,22 +400,16 @@
   </div>
 </div>
 
-<!-- Match confirmation modal -->
+<!-- Match modal -->
 <div class="modal-wrap" id="match-modal">
   <div class="modal">
     <h3>Invoice match found</h3>
-    <p style="font-size:13px;color:var(--tx2);margin-bottom:14px;">The payment amount matches the following unpaid invoice(s). Confirm to mark them as paid and settle this payment.</p>
+    <p id="match-subtitle" style="font-size:13px;color:var(--tx2);margin-bottom:14px;">The payment amount matches the following unpaid invoice(s). Confirm to mark them as paid and settle this payment.</p>
     <div class="match-box">
       <div class="match-box-title">Matched invoices</div>
       <div id="match-rows"></div>
-      <div class="match-sum">
-        <span style="color:var(--tx2);">Invoice total</span>
-        <span id="match-inv-total" style="font-weight:500;"></span>
-      </div>
-      <div class="match-sum" style="border-top:none;padding-top:2px;">
-        <span style="color:var(--tx2);">Payment received</span>
-        <span id="match-pay-amt" style="font-weight:500;color:var(--teal-dk);"></span>
-      </div>
+      <div class="match-sum"><span style="color:var(--tx2);">Invoice total</span><span id="match-inv-total" style="font-weight:500;"></span></div>
+      <div class="match-sum" style="border-top:none;padding-top:2px;"><span style="color:var(--tx2);">Payment received</span><span id="match-pay-amt" style="font-weight:500;color:var(--teal-dk);"></span></div>
       <div class="match-diff" id="match-diff"></div>
     </div>
     <div class="form-actions">
@@ -301,9 +419,71 @@
   </div>
 </div>
 
+<!-- Sync info modal -->
+<div class="modal-wrap" id="sync-info-modal">
+  <div class="modal" style="max-width:400px;">
+    <h3>Sync from Gmail</h3>
+    <p style="font-size:13px;color:var(--tx2);line-height:1.6;margin-bottom:1rem;">Gmail sync runs through your Claude chat — it can't connect to Gmail directly from this page due to browser security restrictions.</p>
+    <p style="font-size:13px;color:var(--tx2);line-height:1.6;margin-bottom:1rem;">To sync invoices from your tracked senders:</p>
+    <ol style="font-size:13px;color:var(--tx2);line-height:1.8;padding-left:1.25rem;margin-bottom:1rem;">
+      <li>Open your Claude chat</li>
+      <li>Say <span style="font-family:monospace;background:var(--bg2);padding:1px 6px;border-radius:4px;color:var(--tx);">Sync Gmail invoices</span></li>
+      <li>Claude will scan your tracked senders and save new invoices here automatically</li>
+    </ol>
+    <div style="background:var(--bg2);border-radius:var(--r);padding:10px 14px;margin-bottom:1rem;">
+      <div style="font-size:11px;color:var(--tx2);margin-bottom:6px;font-weight:500;">Your tracked senders</div>
+      <div id="sync-info-senders" style="font-size:13px;color:var(--tx);"></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-save btn-dark" onclick="document.getElementById('sync-info-modal').classList.remove('open')">Got it</button>
+    </div>
+  </div>
+</div>
+
+<!-- Multi-payment match modal -->
+<div class="modal-wrap" id="multipay-modal">
+  <div class="modal" style="max-width:500px;">
+    <h3>Multi-payment match found</h3>
+    <p id="multipay-subtitle" style="font-size:13px;color:var(--tx2);margin-bottom:14px;">The following unmatched payments combined match one or more unpaid invoices. Confirm to settle all.</p>
+    <div class="match-box">
+      <div class="match-box-title">Payments being combined</div>
+      <div id="multipay-pay-rows"></div>
+      <div class="match-sum">
+        <span style="color:var(--tx2);">Combined payment total</span>
+        <span id="multipay-pay-total" style="font-weight:500;color:var(--teal-dk);"></span>
+      </div>
+    </div>
+    <div class="match-box" style="margin-top:10px;">
+      <div class="match-box-title">Invoices to be settled</div>
+      <div id="multipay-inv-rows"></div>
+      <div class="match-sum">
+        <span style="color:var(--tx2);">Invoice total</span>
+        <span id="multipay-inv-total" style="font-weight:500;"></span>
+      </div>
+      <div class="match-diff" id="multipay-diff"></div>
+    </div>
+    <div class="form-actions" style="margin-top:1rem;">
+      <button class="btn-cancel" onclick="declineMultiMatch()">Skip</button>
+      <button class="btn-save btn-teal" id="multipay-confirm-btn" onclick="confirmMultiMatch()">Confirm &amp; settle all</button>
+    </div>
+  </div>
+</div>
+
+<!-- Rescan summary modal -->
+<div class="modal-wrap" id="rescan-summary-modal">
+  <div class="modal" style="max-width:400px;">
+    <h3 id="rescan-summary-title">Re-Scan Settlement complete</h3>
+    <div id="rescan-summary-body" style="margin:12px 0 0;"></div>
+    <div class="form-actions" style="margin-top:1.25rem;">
+      <button class="btn-save btn-dark" onclick="document.getElementById('rescan-summary-modal').classList.remove('open')">Close</button>
+    </div>
+  </div>
+</div>
+
 <script>
   const SUPABASE_URL = 'https://zorhvfycftabmhlvnajf.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpvcmh2ZnljZnRhYm1obHZuYWpmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1OTE4MzYsImV4cCI6MjA5MDE2NzgzNn0.NEZSem4W_n4rVwp0lNTMj81yqGz0vkNtKvNPpwKMIO4';
+  const CLIENTS = ['CFI','Jolex','KSV','GOT SG'];
 
   let sb = null;
   let invoices = [], payments = [];
@@ -316,31 +496,17 @@
     const btn = document.getElementById('login-btn');
     const errEl = document.getElementById('login-error');
     if (!email || !password) return;
-
-    btn.disabled = true;
-    btn.textContent = 'Signing in...';
-    errEl.style.display = 'none';
-
+    btn.disabled = true; btn.textContent = 'Signing in...'; errEl.style.display = 'none';
     const { error } = await sb.auth.signInWithPassword({ email, password });
-    if (error) {
-      errEl.textContent = error.message;
-      errEl.style.display = 'block';
-      btn.disabled = false;
-      btn.textContent = 'Sign in';
-    }
+    if (error) { errEl.textContent = error.message; errEl.style.display = 'block'; btn.disabled = false; btn.textContent = 'Sign in'; }
   }
-
-  async function doLogout() {
-    await sb.auth.signOut();
-  }
-
+  async function doLogout() { await sb.auth.signOut(); }
   function showApp(session) {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app-screen').style.display = 'block';
     document.getElementById('user-email').textContent = session.user.email;
     loadAll();
   }
-
   function showLogin() {
     document.getElementById('app-screen').style.display = 'none';
     document.getElementById('login-screen').style.display = 'flex';
@@ -353,66 +519,56 @@
   /* ── Utilities ── */
   function showError(title, detail) {
     document.getElementById('error-area').innerHTML =
-      `<div class="error-box"><strong>${title}</strong>${detail ? '<span>' + detail + '</span>' : ''}</div>`;
+      `<div class="error-box"><strong>${title}</strong>${detail?'<span>'+detail+'</span>':''}</div>`;
   }
   function clearError() { document.getElementById('error-area').innerHTML = ''; }
-
   function setStatus(msg, type) {
     const el = document.getElementById('status-bar');
-    el.textContent = msg;
-    el.className = 'status-bar ' + (type || '');
-    if (type === 'saved') setTimeout(() => { if (el.textContent === msg) el.textContent = ''; }, 2500);
+    el.textContent = msg; el.className = 'status-bar '+(type||'');
+    if (type==='saved') setTimeout(()=>{ if(el.textContent===msg) el.textContent=''; }, 2500);
   }
-
-  function parseAmt(s) { return parseFloat(String(s).replace(/,/g, '')) || 0; }
-  function fmt(n) { return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
-  function fmtD(n) { return Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
-
+  function parseAmt(s) { return parseFloat(String(s).replace(/,/g,''))||0; }
+  function fmt(n) { return '$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function fmtD(n) { return Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
   function bindAmt(id) {
     const el = document.getElementById(id);
-    el.addEventListener('input', () => {
-      let raw = el.value.replace(/[^0-9.]/g, '');
-      const pts = raw.split('.');
-      pts[0] = pts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-      el.value = pts.length > 1 ? pts[0] + '.' + pts[1] : pts[0];
+    el.addEventListener('input',()=>{
+      let raw=el.value.replace(/[^0-9.]/g,'');
+      const pts=raw.split('.');
+      pts[0]=pts[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');
+      el.value=pts.length>1?pts[0]+'.'+pts[1]:pts[0];
     });
-    el.addEventListener('blur', () => { const n = parseAmt(el.value); if (n) el.value = fmtD(n); });
+    el.addEventListener('blur',()=>{ const n=parseAmt(el.value); if(n) el.value=fmtD(n); });
   }
-
   function sBadge(s) {
-    const m = { draft: 'b-draft', sent: 'b-sent', overdue: 'b-overdue', paid: 'b-paid' };
-    return `<span class="badge ${m[s] || 'b-draft'}">${s[0].toUpperCase() + s.slice(1)}</span>`;
+    const m={draft:'b-draft',sent:'b-sent',overdue:'b-overdue',paid:'b-paid'};
+    return `<span class="badge ${m[s]||'b-draft'}">${s[0].toUpperCase()+s.slice(1)}</span>`;
   }
-
   function updateSummary() {
     document.getElementById('s-total').textContent = invoices.length;
-    document.getElementById('s-value').textContent = fmt(invoices.reduce((a, i) => a + Number(i.amount), 0));
-    document.getElementById('s-paid').textContent = fmt(invoices.filter(i => i.status === 'paid').reduce((a, i) => a + Number(i.amount), 0));
-    document.getElementById('s-received').textContent = fmt(payments.reduce((a, p) => a + Number(p.amount), 0));
+    document.getElementById('s-value').textContent = fmt(invoices.reduce((a,i)=>a+Number(i.amount),0));
+    document.getElementById('s-paid').textContent  = fmt(invoices.filter(i=>i.status==='paid').reduce((a,i)=>a+Number(i.amount),0));
+    document.getElementById('s-received').textContent = fmt(payments.reduce((a,p)=>a+Number(p.amount),0));
   }
 
+  /* ── Render ── */
   function render() {
     const q = document.getElementById('search').value.toLowerCase();
     const f = document.getElementById('filter').value;
-    const list = invoices.filter(i => {
-      const mq = !q || (i.client||'').toLowerCase().includes(q) || (i.num||'').toLowerCase().includes(q) || (i.remarks||'').toLowerCase().includes(q);
-      return mq && (!f || i.status === f);
+    const list = invoices.filter(i=>{
+      const mq=!q||(i.client||'').toLowerCase().includes(q)||(i.num||'').toLowerCase().includes(q)||(i.remarks||'').toLowerCase().includes(q);
+      return mq&&(!f||i.status===f);
     });
-
-    document.getElementById('inv-loading').style.display = 'none';
-    document.getElementById('inv-table').style.display = list.length ? '' : 'none';
-    document.getElementById('inv-empty').style.display = !list.length ? 'block' : 'none';
-
-    const tb = document.getElementById('inv-list');
-    tb.innerHTML = '';
-    list.forEach(inv => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td style="font-weight:500;">${inv.num||''}</td>
-        <td>${inv.client||''}</td>
+    document.getElementById('inv-loading').style.display='none';
+    document.getElementById('inv-table').style.display=list.length?'':'none';
+    document.getElementById('inv-empty').style.display=!list.length?'block':'none';
+    const tb=document.getElementById('inv-list'); tb.innerHTML='';
+    list.forEach(inv=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`
+        <td style="font-weight:500;">${inv.num||''}</td><td>${inv.client||''}</td>
         <td>${fmt(inv.amount)}</td>
-        <td style="color:var(--tx2);">${inv.issue||''}</td>
-        <td style="color:var(--tx2);">${inv.due||''}</td>
+        <td style="color:var(--tx2);">${inv.issue||''}</td><td style="color:var(--tx2);">${inv.due||''}</td>
         <td class="rmk" title="${(inv.remarks||'').replace(/"/g,'&quot;')}">${inv.remarks||'<span style="color:var(--tx3)">—</span>'}</td>
         <td>${sBadge(inv.status||'draft')}</td>
         <td>
@@ -422,16 +578,13 @@
         </td>`;
       tb.appendChild(tr);
     });
-
-    const pl = payments.filter(p => !q || (p.client||'').toLowerCase().includes(q) || (p.ref||'').toLowerCase().includes(q));
-    document.getElementById('pay-table').style.display = pl.length ? '' : 'none';
-    document.getElementById('pay-empty').style.display = !pl.length ? 'block' : 'none';
-
-    const pb = document.getElementById('pay-list');
-    pb.innerHTML = '';
-    pl.forEach(p => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
+    const pl=payments.filter(p=>!q||(p.client||'').toLowerCase().includes(q)||(p.ref||'').toLowerCase().includes(q));
+    document.getElementById('pay-table').style.display=pl.length?'':'none';
+    document.getElementById('pay-empty').style.display=!pl.length?'block':'none';
+    const pb=document.getElementById('pay-list'); pb.innerHTML='';
+    pl.forEach(p=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`
         <td style="font-weight:500;">${p.ref||'<span style="color:var(--tx3)">—</span>'}</td>
         <td>${p.client||'<span style="color:var(--tx3)">—</span>'}</td>
         <td style="color:var(--teal-dk);font-weight:500;">${fmt(p.amount)}</td>
@@ -441,110 +594,240 @@
         <td><button class="act danger" onclick="delPay(${p.id})">Delete</button></td>`;
       pb.appendChild(tr);
     });
-
     updateSummary();
   }
 
   async function loadAll() {
-    clearError();
-    setStatus('Loading...', 'saving');
+    clearError(); setStatus('Loading...','saving');
     try {
-      const [invRes, payRes] = await Promise.all([
-        sb.from('invoices').select('*').order('id', { ascending: true }),
-        sb.from('payments').select('*').order('id', { ascending: true })
+      const [ir,pr]=await Promise.all([
+        sb.from('invoices').select('*').order('id',{ascending:true}),
+        sb.from('payments').select('*').order('id',{ascending:true})
       ]);
-      if (invRes.error) { showError('Could not load invoices', invRes.error.message); setStatus('Failed', 'error'); return; }
-      if (payRes.error) { showError('Could not load payments', payRes.error.message); setStatus('Failed', 'error'); return; }
-      invoices = invRes.data || [];
-      payments = payRes.data || [];
+      if(ir.error){showError('Could not load invoices',ir.error.message);setStatus('Failed','error');return;}
+      if(pr.error){showError('Could not load payments',pr.error.message);setStatus('Failed','error');return;}
+      invoices=ir.data||[]; payments=pr.data||[];
       clearError(); setStatus(''); render();
-    } catch (e) { showError('Connection failed', e.message); setStatus('Failed', 'error'); }
+    } catch(e){showError('Connection failed',e.message);setStatus('Failed','error');}
+  }
+
+  /* ── Tracked Emails ── */
+  let trackedEmails = [];
+
+  function loadTrackedEmails() {
+    try {
+      const raw = localStorage.getItem('tracked-emails');
+      trackedEmails = raw ? JSON.parse(raw) : [];
+    } catch(e) { trackedEmails = []; }
+    renderTrackedEmails();
+  }
+
+  function saveTrackedEmails() {
+    localStorage.setItem('tracked-emails', JSON.stringify(trackedEmails));
+    renderTrackedEmails();
+  }
+
+  function toggleTrackedSection() {
+    const el = document.getElementById('tracked-section');
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  }
+
+  function renderTrackedEmails() {
+    const list = document.getElementById('tracked-list');
+    const empty = document.getElementById('tracked-empty');
+    const countEl = document.getElementById('tracked-count');
+    countEl.textContent = trackedEmails.length;
+
+    const chips = list.querySelectorAll('.tracked-chip');
+    chips.forEach(c => c.remove());
+
+    if (!trackedEmails.length) {
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+      trackedEmails.forEach((te, i) => {
+        const chip = document.createElement('div');
+        chip.className = 'tracked-chip';
+        chip.innerHTML = `
+          <span class="tracked-chip-email">${te.email}</span>
+          ${te.client ? `<span class="tracked-chip-client">→ ${te.client}</span>` : ''}
+          <button class="tracked-chip-del" onclick="removeTrackedEmail(${i})" title="Remove">×</button>`;
+        list.appendChild(chip);
+      });
+    }
+  }
+
+  function addTrackedEmail() {
+    const email = document.getElementById('te-email').value.trim().toLowerCase();
+    const client = document.getElementById('te-client').value;
+    if (!email || !email.includes('@')) { alert('Please enter a valid email address.'); return; }
+    if (trackedEmails.find(te => te.email === email)) { alert('This sender is already tracked.'); return; }
+    trackedEmails.push({ email, client: client || null });
+    document.getElementById('te-email').value = '';
+    document.getElementById('te-client').value = '';
+    saveTrackedEmails();
+  }
+
+  function removeTrackedEmail(idx) {
+    trackedEmails.splice(idx, 1);
+    saveTrackedEmails();
+  }
+
+  function openSyncInfoModal() {
+    const sendersEl = document.getElementById('sync-info-senders');
+    if (!trackedEmails.length) {
+      sendersEl.textContent = 'No senders tracked yet. Add senders using the Tracked emails button.';
+      sendersEl.style.color = 'var(--tx3)';
+    } else {
+      sendersEl.style.color = 'var(--tx)';
+      sendersEl.innerHTML = trackedEmails.map(te =>
+        `<div style="padding:2px 0;">${te.email}${te.client ? ' <span style="color:var(--tx2);font-size:12px;">→ '+te.client+'</span>' : ''}</div>`
+      ).join('');
+    }
+    document.getElementById('sync-info-modal').classList.add('open');
+    document.getElementById('sync-info-modal').addEventListener('click', e => {
+      if (e.target === document.getElementById('sync-info-modal'))
+        document.getElementById('sync-info-modal').classList.remove('open');
+    }, { once: true });
   }
 
   /* ── Invoice CRUD ── */
   function openInvModal() {
-    editId = null;
-    document.getElementById('inv-title').textContent = 'New invoice';
-    const t = new Date().toISOString().slice(0,10);
-    const d = new Date(Date.now()+30*86400000).toISOString().slice(0,10);
-    document.getElementById('f-num').value = '';
-    document.getElementById('f-client').value = '';
-    document.getElementById('f-amount').value = '';
-    document.getElementById('f-issue').value = t;
-    document.getElementById('f-due').value = d;
-    document.getElementById('f-remarks').value = '';
-    document.getElementById('f-status').value = 'sent';
+    editId=null;
+    document.getElementById('inv-title').textContent='New invoice';
+    const t=new Date().toISOString().slice(0,10);
+    const d=new Date(Date.now()+30*86400000).toISOString().slice(0,10);
+    document.getElementById('f-num').value='';
+    document.getElementById('f-client').value='';
+    document.getElementById('f-amount').value='';
+    document.getElementById('f-issue').value=t;
+    document.getElementById('f-due').value=d;
+    document.getElementById('f-remarks').value='';
+    document.getElementById('f-status').value='sent';
     document.getElementById('inv-modal').classList.add('open');
   }
   function editInv(id) {
-    editId = id;
-    const inv = invoices.find(i => i.id === id);
-    document.getElementById('inv-title').textContent = 'Edit invoice';
-    document.getElementById('f-num').value = inv.num||'';
-    document.getElementById('f-client').value = inv.client||'';
-    document.getElementById('f-amount').value = fmtD(inv.amount);
-    document.getElementById('f-issue').value = inv.issue||'';
-    document.getElementById('f-due').value = inv.due||'';
-    document.getElementById('f-remarks').value = inv.remarks||'';
-    document.getElementById('f-status').value = inv.status||'sent';
+    editId=id;
+    const inv=invoices.find(i=>i.id===id);
+    document.getElementById('inv-title').textContent='Edit invoice';
+    document.getElementById('f-num').value=inv.num||'';
+    document.getElementById('f-client').value=inv.client||'';
+    document.getElementById('f-amount').value=fmtD(inv.amount);
+    document.getElementById('f-issue').value=inv.issue||'';
+    document.getElementById('f-due').value=inv.due||'';
+    document.getElementById('f-remarks').value=inv.remarks||'';
+    document.getElementById('f-status').value=inv.status||'sent';
     document.getElementById('inv-modal').classList.add('open');
   }
   function closeInvModal() { document.getElementById('inv-modal').classList.remove('open'); }
+  /* ── Duplicate invoice check ── */
+  let dupPendingPayload = null;
+  let dupPendingSource  = null; // 'manual' | 'pdf'
 
-  async function saveInvoice() {
-    const num = document.getElementById('f-num').value.trim();
-    const client = document.getElementById('f-client').value;
-    const amount = parseAmt(document.getElementById('f-amount').value);
-    const issue = document.getElementById('f-issue').value;
-    const due = document.getElementById('f-due').value;
-    const remarks = document.getElementById('f-remarks').value.trim();
-    const status = document.getElementById('f-status').value;
-    if (!num || !client || !issue || !due) return;
-    const btn = document.getElementById('inv-save-btn');
-    btn.disabled = true; closeInvModal(); setStatus('Saving...', 'saving');
-    const payload = { num, client, amount, issue, due, remarks, status };
+  function checkDuplicate(num, payload, source) {
+    const existing = invoices.find(i => i.num.trim().toLowerCase() === num.trim().toLowerCase() && i.id !== (editId||null));
+    if (!existing) return false;
+    dupPendingPayload = payload;
+    dupPendingSource  = source;
+    const statusLabel = { draft:'Draft', sent:'Sent', overdue:'Overdue', paid:'Paid' };
+    document.getElementById('dup-existing').innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;">
+        <div><span style="color:var(--tx2);font-size:11px;">Invoice #</span><br><strong>${existing.num}</strong></div>
+        <div><span style="color:var(--tx2);font-size:11px;">Client</span><br>${existing.client||'—'}</div>
+        <div><span style="color:var(--tx2);font-size:11px;">Amount</span><br>${fmt(existing.amount)}</div>
+        <div><span style="color:var(--tx2);font-size:11px;">Status</span><br><span class="badge b-${existing.status}">${statusLabel[existing.status]||existing.status}</span></div>
+        <div><span style="color:var(--tx2);font-size:11px;">Issue date</span><br>${existing.issue||'—'}</div>
+        <div><span style="color:var(--tx2);font-size:11px;">Due date</span><br>${existing.due||'—'}</div>
+        ${existing.remarks?`<div style="grid-column:1/-1;"><span style="color:var(--tx2);font-size:11px;">Remarks</span><br>${existing.remarks}</div>`:''}
+      </div>`;
+    document.getElementById('dup-modal').classList.add('open');
+    return true;
+  }
+
+  function closeDupModal() {
+    document.getElementById('dup-modal').classList.remove('open');
+    const src = dupPendingSource;
+    dupPendingPayload = null;
+    dupPendingSource  = null;
+    if (src === 'pdf') {
+      document.getElementById('pf-save-btn').disabled = false;
+      document.getElementById('pf-save-btn').textContent = 'Save invoice';
+    } else {
+      document.getElementById('inv-save-btn').disabled = false;
+    }
+  }
+
+  async function proceedDespiteDuplicate() {
+    document.getElementById('dup-modal').classList.remove('open');
+    const payload = dupPendingPayload;
+    const source  = dupPendingSource;
+    dupPendingPayload = null; dupPendingSource = null;
+    await doSaveInvoicePayload(payload, source);
+  }
+
+  async function doSaveInvoicePayload(payload, source) {
+    setStatus('Saving...','saving');
     try {
       let error, data;
-      if (editId) {
+      if (source === 'manual' && editId) {
         ({ error } = await sb.from('invoices').update(payload).eq('id', editId));
-        if (!error) Object.assign(invoices.find(i => i.id === editId), payload);
+        if (!error) Object.assign(invoices.find(i=>i.id===editId), payload);
       } else {
         ({ data, error } = await sb.from('invoices').insert(payload).select().single());
         if (!error) invoices.push(data);
       }
-      if (error) { showError('Save failed', error.message); setStatus('Failed', 'error'); }
-      else { clearError(); setStatus('Saved', 'saved'); render(); }
-    } catch(e) { showError('Save failed', e.message); setStatus('Failed', 'error'); }
-    btn.disabled = false;
+      if (error) { showError('Save failed', error.message); setStatus('Failed','error'); }
+      else {
+        clearError(); setStatus('Saved','saved'); render();
+        if (source === 'pdf') document.getElementById('pdf-confirm-modal').classList.remove('open');
+      }
+    } catch(e) { showError('Save failed', e.message); setStatus('Failed','error'); }
+    document.getElementById('inv-save-btn').disabled = false;
+    const pfBtn = document.getElementById('pf-save-btn');
+    pfBtn.disabled = false; pfBtn.textContent = 'Save invoice';
   }
 
+  async function saveInvoice() {
+    const num    = document.getElementById('f-num').value.trim();
+    const client = document.getElementById('f-client').value;
+    const amount = parseAmt(document.getElementById('f-amount').value);
+    const issue  = document.getElementById('f-issue').value;
+    const due    = document.getElementById('f-due').value;
+    const remarks = document.getElementById('f-remarks').value.trim();
+    const status = document.getElementById('f-status').value;
+    if (!num || !client || !issue || !due) return;
+    const btn = document.getElementById('inv-save-btn');
+    btn.disabled = true;
+    closeInvModal();
+    const payload = { num, client, amount, issue, due, remarks, status };
+    if (!editId && checkDuplicate(num, payload, 'manual')) return;
+    await doSaveInvoicePayload(payload, 'manual');
+  }
   async function markPaid(id) {
-    setStatus('Saving...', 'saving');
-    const { error } = await sb.from('invoices').update({ status: 'paid' }).eq('id', id);
-    if (error) { showError('Update failed', error.message); setStatus('Failed', 'error'); return; }
-    invoices.find(i => i.id === id).status = 'paid';
-    setStatus('Saved', 'saved'); render();
+    setStatus('Saving...','saving');
+    const{error}=await sb.from('invoices').update({status:'paid'}).eq('id',id);
+    if(error){showError('Update failed',error.message);setStatus('Failed','error');return;}
+    invoices.find(i=>i.id===id).status='paid'; setStatus('Saved','saved'); render();
   }
-
   async function delInv(id) {
-    if (!confirm('Delete this invoice?')) return;
-    setStatus('Deleting...', 'saving');
-    const { error } = await sb.from('invoices').delete().eq('id', id);
-    if (error) { showError('Delete failed', error.message); setStatus('Failed', 'error'); return; }
-    invoices = invoices.filter(i => i.id !== id);
-    setStatus('Deleted', 'saved'); render();
+    if(!confirm('Delete this invoice?'))return;
+    setStatus('Deleting...','saving');
+    const{error}=await sb.from('invoices').delete().eq('id',id);
+    if(error){showError('Delete failed',error.message);setStatus('Failed','error');return;}
+    invoices=invoices.filter(i=>i.id!==id); setStatus('Deleted','saved'); render();
   }
 
   /* ── Matching ── */
   const TOLERANCE = 5;
+
+  // Single payment → one or more invoices
   function findMatch(payAmt, clientFilter) {
     let cands = invoices.filter(i => i.status !== 'paid' && i.status !== 'draft');
     if (clientFilter) cands = cands.filter(i => i.client === clientFilter);
-    const n = Math.min(cands.length, 20);
-    let best = null;
+    const n = Math.min(cands.length, 20); let best = null;
     for (let mask = 1; mask < (1 << n); mask++) {
       const combo = []; let sum = 0;
-      for (let b = 0; b < n; b++) { if (mask & (1<<b)) { combo.push(cands[b]); sum += Number(cands[b].amount); } }
+      for (let b = 0; b < n; b++) { if (mask & (1 << b)) { combo.push(cands[b]); sum += Number(cands[b].amount); } }
       const diff = Math.abs(sum - payAmt);
       if (diff <= TOLERANCE) {
         if (!best || combo.length < best.combo.length || (combo.length === best.combo.length && diff < best.diff))
@@ -554,102 +837,352 @@
     return best;
   }
 
+  // Multiple payments combined → one or more invoices
+  function findMultiPaymentMatch(unmatchedPayments) {
+    const unpaidInvs = invoices.filter(i => i.status !== 'paid' && i.status !== 'draft');
+    if (!unpaidInvs.length || unmatchedPayments.length < 2) return null;
+
+    const np = Math.min(unmatchedPayments.length, 10);
+    const ni = Math.min(unpaidInvs.length, 15);
+    let best = null;
+
+    // Try all combinations of 2+ payments
+    for (let pmask = 3; pmask < (1 << np); pmask++) {
+      // Must have at least 2 payments set
+      if ((pmask & (pmask - 1)) === 0) continue;
+      const payCombo = []; let paySum = 0;
+      for (let b = 0; b < np; b++) {
+        if (pmask & (1 << b)) { payCombo.push(unmatchedPayments[b]); paySum += Number(unmatchedPayments[b].amount); }
+      }
+      // Try all combos of invoices against this payment sum
+      for (let imask = 1; imask < (1 << ni); imask++) {
+        const invCombo = []; let invSum = 0;
+        for (let b = 0; b < ni; b++) {
+          if (imask & (1 << b)) { invCombo.push(unpaidInvs[b]); invSum += Number(unpaidInvs[b].amount); }
+        }
+        const diff = Math.abs(paySum - invSum);
+        if (diff <= TOLERANCE) {
+          const score = payCombo.length + invCombo.length;
+          if (!best || diff < best.diff || (diff === best.diff && score < best.score)) {
+            best = { payCombo, invCombo, paySum, invSum, diff, score };
+          }
+        }
+      }
+    }
+    return best;
+  }
+
   /* ── Payment CRUD ── */
   function openPayModal() {
-    document.getElementById('p-ref').value = '';
-    document.getElementById('p-client').value = '';
-    document.getElementById('p-amount').value = '';
-    document.getElementById('p-date').value = new Date().toISOString().slice(0,10);
-    document.getElementById('p-notes').value = '';
+    document.getElementById('p-ref').value='';
+    document.getElementById('p-client').value='';
+    document.getElementById('p-amount').value='';
+    document.getElementById('p-date').value=new Date().toISOString().slice(0,10);
+    document.getElementById('p-notes').value='';
     document.getElementById('pay-modal').classList.add('open');
   }
-  function closePayModal() { document.getElementById('pay-modal').classList.remove('open'); }
-
+  function closePayModal(){document.getElementById('pay-modal').classList.remove('open');}
   function submitPayment() {
-    const ref = document.getElementById('p-ref').value.trim();
-    const client = document.getElementById('p-client').value;
-    const amount = parseAmt(document.getElementById('p-amount').value);
-    const date = document.getElementById('p-date').value;
-    const notes = document.getElementById('p-notes').value.trim();
-    if (!amount || !date) return;
-    pendingPay = { ref: ref||null, client: client||null, amount, date, notes: notes||null };
+    const ref=document.getElementById('p-ref').value.trim();
+    const client=document.getElementById('p-client').value;
+    const amount=parseAmt(document.getElementById('p-amount').value);
+    const date=document.getElementById('p-date').value;
+    const notes=document.getElementById('p-notes').value.trim();
+    if(!amount||!date)return;
+    pendingPay={ref:ref||null,client:client||null,amount,date,notes:notes||null};
     closePayModal();
-    const match = findMatch(amount, client||null);
-    if (match) {
-      pendingMatchIds = match.combo.map(i => i.id);
-      document.getElementById('match-rows').innerHTML = match.combo.map(i =>
+    const match=findMatch(amount,client||null);
+    if(match){
+      pendingMatchIds=match.combo.map(i=>i.id);
+      document.getElementById('match-rows').innerHTML=match.combo.map(i=>
         `<div class="match-inv-row"><span style="font-weight:500;">${i.num}${i.client?' — '+i.client:''}</span><span style="color:var(--tx2);">${fmt(i.amount)}</span></div>`
       ).join('');
-      document.getElementById('match-inv-total').textContent = fmt(match.sum);
-      document.getElementById('match-pay-amt').textContent = fmt(amount);
-      document.getElementById('match-diff').textContent = match.diff > 0.005 ? 'Difference: ' + fmt(match.diff) : '';
+      document.getElementById('match-inv-total').textContent=fmt(match.sum);
+      document.getElementById('match-pay-amt').textContent=fmt(amount);
+      document.getElementById('match-diff').textContent=match.diff>0.005?'Difference: '+fmt(match.diff):'';
       document.getElementById('match-modal').classList.add('open');
-    } else { finalisePay(false); }
+    } else{finalisePay(false);}
   }
-
   async function confirmMatch() {
-    const btn = document.getElementById('match-confirm-btn');
-    btn.disabled = true;
+    const btn=document.getElementById('match-confirm-btn');
+    btn.disabled=true;
     document.getElementById('match-modal').classList.remove('open');
-    setStatus('Settling...', 'saving');
-    const { error } = await sb.from('invoices').update({ status: 'paid' }).in('id', pendingMatchIds);
-    if (error) { showError('Settle failed', error.message); setStatus('Failed', 'error'); btn.disabled = false; return; }
-    pendingMatchIds.forEach(id => { const inv = invoices.find(i => i.id === id); if (inv) inv.status = 'paid'; });
-    btn.disabled = false;
-    await finalisePay(true);
+    setStatus('Settling...','saving');
+    const{error}=await sb.from('invoices').update({status:'paid'}).in('id',pendingMatchIds);
+    if(error){showError('Settle failed',error.message);setStatus('Failed','error');btn.disabled=false;return;}
+    pendingMatchIds.forEach(id=>{const inv=invoices.find(i=>i.id===id);if(inv)inv.status='paid';});
+    btn.disabled=false;
+    if(pendingPay && pendingPay._rematching) {
+      await settleExistingPayment(pendingPay._rematching);
+    } else {
+      await finalisePay(true);
+    }
   }
-
-  function declineMatch() {
+  function declineMatch(){
     document.getElementById('match-modal').classList.remove('open');
-    finalisePay(false);
+    if(pendingPay && pendingPay._rematching) {
+      rescanSkipped++;
+      pendingPay=null; pendingMatchIds=[];
+      processNextRescan();
+    } else {
+      finalisePay(false);
+    }
   }
-
   async function finalisePay(settled) {
-    setStatus('Saving...', 'saving');
+    setStatus('Saving...','saving');
+    try{
+      const{data,error}=await sb.from('payments').insert({...pendingPay,settled}).select().single();
+      if(error){showError('Payment save failed',error.message);setStatus('Failed','error');return;}
+      payments.push(data); pendingPay=null; pendingMatchIds=[];
+      clearError(); setStatus('Saved','saved'); render();
+    }catch(e){showError('Payment save failed',e.message);setStatus('Failed','error');}
+  }
+
+  async function settleExistingPayment(id) {
+    setStatus('Updating...','saving');
     try {
-      const { data, error } = await sb.from('payments').insert({ ...pendingPay, settled }).select().single();
-      if (error) { showError('Payment save failed', error.message); setStatus('Failed', 'error'); return; }
-      payments.push(data);
+      const { error } = await sb.from('payments').update({ settled: true }).eq('id', id);
+      if (error) { showError('Update failed', error.message); setStatus('Failed','error'); return; }
+      const p = payments.find(p => p.id === id);
+      if (p) p.settled = true;
+      rescanSettled++;
       pendingPay = null; pendingMatchIds = [];
-      clearError(); setStatus('Saved', 'saved'); render();
-    } catch(e) { showError('Payment save failed', e.message); setStatus('Failed', 'error'); }
+      clearError(); setStatus('Settled','saved'); render();
+      processNextRescan();
+    } catch(e) { showError('Update failed', e.message); setStatus('Failed','error'); }
+  }
+  /* ── Bulk Re-Scan Settlement ── */
+  let rescanQueue = [];
+  let rescanSettled = 0;
+  let rescanSkipped = 0;
+  let rescanTotal = 0;
+  let pendingMultiMatch = null;
+
+  function startRescanSettlement() {
+    const unmatched = payments.filter(p => !p.settled);
+    if (!unmatched.length) { showRescanSummary(0, 0, 0); return; }
+    rescanQueue = [...unmatched];
+    rescanSettled = 0;
+    rescanSkipped = 0;
+    rescanTotal = unmatched.length;
+    processNextRescan();
+  }
+
+  function processNextRescan() {
+    // Single-payment pass
+    while (rescanQueue.length) {
+      const p = rescanQueue.shift();
+      const match = findMatch(Number(p.amount), p.client || null);
+      if (match) {
+        pendingPay = { ...p, _rematching: p.id };
+        pendingMatchIds = match.combo.map(i => i.id);
+        document.getElementById('match-rows').innerHTML = match.combo.map(i =>
+          `<div class="match-inv-row">
+            <span style="font-weight:500;">${i.num}${i.client?' — '+i.client:''}</span>
+            <span style="color:var(--tx2);">${fmt(i.amount)}</span>
+          </div>`
+        ).join('');
+        document.getElementById('match-inv-total').textContent = fmt(match.sum);
+        document.getElementById('match-pay-amt').textContent = fmt(p.amount);
+        document.getElementById('match-diff').textContent = match.diff > 0.005 ? 'Difference: ' + fmt(match.diff) : '';
+        const remaining = rescanQueue.length;
+        document.getElementById('match-subtitle').textContent =
+          `Payment of ${fmt(p.amount)}${p.ref?' ('+p.ref+')':''} matches the following unpaid invoice(s). Confirm to settle.${remaining?' ('+remaining+' more to scan after this)':''}`;
+        document.getElementById('match-modal').classList.add('open');
+        return;
+      } else {
+        rescanSkipped++;
+      }
+    }
+
+    // Multi-payment pass — try combining remaining unmatched payments
+    const stillUnmatched = payments.filter(p => !p.settled);
+    if (stillUnmatched.length >= 2) {
+      const multiMatch = findMultiPaymentMatch(stillUnmatched);
+      if (multiMatch) {
+        pendingMultiMatch = multiMatch;
+        document.getElementById('multipay-pay-rows').innerHTML = multiMatch.payCombo.map(p =>
+          `<div class="match-inv-row">
+            <span style="font-weight:500;">${p.ref||'Payment'} ${p.date?' — '+p.date:''}</span>
+            <span style="color:var(--teal-dk);font-weight:500;">${fmt(p.amount)}</span>
+          </div>`
+        ).join('');
+        document.getElementById('multipay-pay-total').textContent = fmt(multiMatch.paySum);
+        document.getElementById('multipay-inv-rows').innerHTML = multiMatch.invCombo.map(i =>
+          `<div class="match-inv-row">
+            <span style="font-weight:500;">${i.num}${i.client?' — '+i.client:''}</span>
+            <span style="color:var(--tx2);">${fmt(i.amount)}</span>
+          </div>`
+        ).join('');
+        document.getElementById('multipay-inv-total').textContent = fmt(multiMatch.invSum);
+        document.getElementById('multipay-diff').textContent = multiMatch.diff > 0.005 ? 'Difference: ' + fmt(multiMatch.diff) : '';
+        document.getElementById('multipay-modal').classList.add('open');
+        return;
+      }
+    }
+
+    // Reset match modal subtitle
+    document.getElementById('match-subtitle').textContent =
+      'The payment amount matches the following unpaid invoice(s). Confirm to mark them as paid and settle this payment.';
+    showRescanSummary(rescanTotal, rescanSettled, rescanSkipped);
+  }
+
+  async function confirmMultiMatch() {
+    const btn = document.getElementById('multipay-confirm-btn');
+    btn.disabled = true;
+    document.getElementById('multipay-modal').classList.remove('open');
+    setStatus('Settling...', 'saving');
+
+    const match = pendingMultiMatch;
+    pendingMultiMatch = null;
+
+    try {
+      // Mark invoices as paid
+      const invIds = match.invCombo.map(i => i.id);
+      const { error: invErr } = await sb.from('invoices').update({ status: 'paid' }).in('id', invIds);
+      if (invErr) { showError('Settle failed', invErr.message); setStatus('Failed','error'); btn.disabled=false; return; }
+      invIds.forEach(id => { const inv = invoices.find(i => i.id === id); if (inv) inv.status = 'paid'; });
+
+      // Mark all combined payments as settled
+      const payIds = match.payCombo.map(p => p.id);
+      const { error: payErr } = await sb.from('payments').update({ settled: true }).in('id', payIds);
+      if (payErr) { showError('Settle failed', payErr.message); setStatus('Failed','error'); btn.disabled=false; return; }
+      payIds.forEach(id => { const p = payments.find(p => p.id === id); if (p) p.settled = true; });
+
+      rescanSettled += payIds.length;
+      rescanSkipped = Math.max(0, rescanSkipped - payIds.length);
+      btn.disabled = false;
+      clearError(); setStatus('Settled', 'saved'); render();
+
+      // Check if any unmatched remain
+      const stillUnmatched = payments.filter(p => !p.settled).length;
+      showRescanSummary(rescanTotal, rescanSettled, stillUnmatched);
+    } catch(e) { showError('Settle failed', e.message); setStatus('Failed','error'); btn.disabled=false; }
+  }
+
+  function declineMultiMatch() {
+    document.getElementById('multipay-modal').classList.remove('open');
+    pendingMultiMatch = null;
+    document.getElementById('match-subtitle').textContent =
+      'The payment amount matches the following unpaid invoice(s). Confirm to mark them as paid and settle this payment.';
+    showRescanSummary(rescanTotal, rescanSettled, rescanSkipped);
+  }
+
+  function showRescanSummary(total, settled, unmatched) {
+    const modal = document.getElementById('rescan-summary-modal');
+    const title = document.getElementById('rescan-summary-title');
+    const body  = document.getElementById('rescan-summary-body');
+
+    if (total === 0) {
+      title.textContent = 'Nothing to scan';
+      body.innerHTML = `<p style="font-size:13px;color:var(--tx2);">There are no unmatched payments to scan. All payments are already settled.</p>`;
+    } else {
+      title.textContent = 'Re-Scan Settlement complete';
+      const allSettled = unmatched === 0;
+      body.innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;">
+          <div style="background:var(--bg2);border-radius:var(--r);padding:12px;text-align:center;">
+            <div style="font-size:11px;color:var(--tx2);margin-bottom:6px;">Scanned</div>
+            <div style="font-size:22px;font-weight:500;">${total}</div>
+          </div>
+          <div style="background:var(--ok-bg);border-radius:var(--r);padding:12px;text-align:center;">
+            <div style="font-size:11px;color:var(--ok-tx);margin-bottom:6px;">Settled</div>
+            <div style="font-size:22px;font-weight:500;color:var(--ok-tx);">${settled}</div>
+          </div>
+          <div style="background:${unmatched>0?'var(--er-bg)':'var(--bg2)'};border-radius:var(--r);padding:12px;text-align:center;">
+            <div style="font-size:11px;color:${unmatched>0?'var(--er-tx)':'var(--tx2)'};margin-bottom:6px;">Unmatched</div>
+            <div style="font-size:22px;font-weight:500;color:${unmatched>0?'var(--er-tx)':'var(--tx2)'};">${unmatched}</div>
+          </div>
+        </div>
+        <p style="font-size:13px;color:var(--tx2);">${
+          allSettled
+            ? 'All unmatched payments have been successfully settled.'
+            : `${unmatched} payment${unmatched>1?'s':''} could not be matched to any unpaid invoice. You can add the missing invoices and re-scan again.`
+        }</p>`;
+    }
+
+    modal.classList.add('open');
+    modal.addEventListener('click', e => { if(e.target===modal) modal.classList.remove('open'); }, {once:true});
   }
 
   async function delPay(id) {
-    if (!confirm('Delete this payment?')) return;
-    setStatus('Deleting...', 'saving');
-    const { error } = await sb.from('payments').delete().eq('id', id);
-    if (error) { showError('Delete failed', error.message); setStatus('Failed', 'error'); return; }
-    payments = payments.filter(p => p.id !== id);
-    setStatus('Deleted', 'saved'); render();
+    if(!confirm('Delete this payment?'))return;
+    setStatus('Deleting...','saving');
+    const{error}=await sb.from('payments').delete().eq('id',id);
+    if(error){showError('Delete failed',error.message);setStatus('Failed','error');return;}
+    payments=payments.filter(p=>p.id!==id); setStatus('Deleted','saved'); render();
   }
 
-  document.getElementById('search').addEventListener('input', render);
-  document.getElementById('filter').addEventListener('change', render);
-  document.getElementById('inv-modal').addEventListener('click', e => { if(e.target===document.getElementById('inv-modal')) closeInvModal(); });
-  document.getElementById('pay-modal').addEventListener('click', e => { if(e.target===document.getElementById('pay-modal')) closePayModal(); });
-  document.getElementById('login-password').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+  /* ── PDF Upload (chat-assisted extraction) ── */
+  function openPdfModal() {
+    document.getElementById('pdf-modal').classList.add('open');
+  }
+  function closePdfModal() {
+    document.getElementById('pdf-modal').classList.remove('open');
+  }
+  function closePdfConfirmModal() {
+    document.getElementById('pdf-confirm-modal').classList.remove('open');
+  }
+  function reopenPdfUpload() {
+    document.getElementById('pdf-confirm-modal').classList.remove('open');
+    openPdfModal();
+  }
 
-  bindAmt('f-amount');
-  bindAmt('p-amount');
+  // Called by Claude via chat to pre-fill the confirmation screen
+  function showPdfConfirm(data) {
+    const filename = data.filename || 'PDF invoice';
+    document.getElementById('pdf-source-info').innerHTML =
+      `Extracted from: <strong>${filename}</strong>${data.vendor ? ' &nbsp;·&nbsp; Vendor: <strong>'+data.vendor+'</strong>' : ''}`;
+    document.getElementById('pf-num').value     = data.inv_num || '';
+    document.getElementById('pf-client').value  = data.client || '';
+    document.getElementById('pf-amount').value  = data.amount ? fmtD(data.amount) : '';
+    document.getElementById('pf-issue').value   = data.issue_date || '';
+    document.getElementById('pf-due').value     = data.due_date || '';
+    document.getElementById('pf-remarks').value = data.remarks || '';
+    document.getElementById('pf-status').value  = 'sent';
+    document.getElementById('pf-save-btn').disabled  = false;
+    document.getElementById('pf-save-btn').textContent = 'Save invoice';
+    document.getElementById('pdf-confirm-modal').classList.add('open');
+  }
+
+  async function savePdfInvoice() {
+    const num    = document.getElementById('pf-num').value.trim();
+    const client = document.getElementById('pf-client').value;
+    const amount = parseAmt(document.getElementById('pf-amount').value);
+    const issue  = document.getElementById('pf-issue').value;
+    const due    = document.getElementById('pf-due').value;
+    const remarks = document.getElementById('pf-remarks').value.trim();
+    const status = document.getElementById('pf-status').value;
+    if (!num || !issue) { alert('Invoice # and issue date are required.'); return; }
+    const btn = document.getElementById('pf-save-btn');
+    btn.disabled = true; btn.textContent = 'Checking...';
+    const payload = { num, client: client||null, amount, issue, due: due||null, remarks, status };
+    if (checkDuplicate(num, payload, 'pdf')) return;
+    await doSaveInvoicePayload(payload, 'pdf');
+  }
+
+  document.getElementById('pdf-modal').addEventListener('click', e => { if(e.target===document.getElementById('pdf-modal')) closePdfModal(); });
+  document.getElementById('pdf-confirm-modal').addEventListener('click', e => { if(e.target===document.getElementById('pdf-confirm-modal')) closePdfConfirmModal(); });
+  document.getElementById('dup-modal').addEventListener('click', e => { if(e.target===document.getElementById('dup-modal')) closeDupModal(); });
+  document.getElementById('multipay-modal').addEventListener('click', e => { if(e.target===document.getElementById('multipay-modal')) declineMultiMatch(); });
+  document.getElementById('filter').addEventListener('change',render);
+  document.getElementById('inv-modal').addEventListener('click',e=>{if(e.target===document.getElementById('inv-modal'))closeInvModal();});
+  document.getElementById('pay-modal').addEventListener('click',e=>{if(e.target===document.getElementById('pay-modal'))closePayModal();});
+  document.getElementById('login-password').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+  document.getElementById('te-email').addEventListener('keydown',e=>{if(e.key==='Enter')addTrackedEmail();});
+  bindAmt('f-amount'); bindAmt('p-amount'); bindAmt('pf-amount');
 
   function initSupabase() {
-    if (typeof supabase === 'undefined') {
-      document.getElementById('login-screen').innerHTML = '<div style="padding:2rem;color:var(--er-tx);">Supabase failed to load. Check your internet connection and reload.</div>';
+    if(typeof supabase==='undefined'){
+      document.getElementById('login-screen').innerHTML='<div style="padding:2rem;color:var(--er-tx);">Supabase failed to load. Check your internet connection.</div>';
       return;
     }
-    sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    sb.auth.onAuthStateChange((event, session) => {
-      if (session) { showApp(session); }
-      else { showLogin(); }
-    });
-
-    sb.auth.getSession().then(({ data: { session } }) => {
-      if (session) { showApp(session); }
-    });
+    sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+    sb.auth.onAuthStateChange((event,session)=>{ if(session)showApp(session); else showLogin(); });
+    sb.auth.getSession().then(({data:{session}})=>{ if(session)showApp(session); });
+    loadTrackedEmails();
   }
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" onload="initSupabase()" onerror="document.getElementById('login-screen').innerHTML='<div style=padding:2rem;color:var(--er-tx)>Supabase CDN failed to load. Check your internet connection.</div>'"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" onload="initSupabase()" onerror="document.getElementById('login-screen').innerHTML='<div style=padding:2rem;color:var(--er-tx)>Supabase CDN failed to load.</div>'"></script>
 </body>
 </html>
